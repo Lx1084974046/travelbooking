@@ -1,28 +1,25 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Home from "../views/Home.vue";
+import store from "../store";
+import routes from "./routes";
 
 Vue.use(VueRouter);
 
-const routes = [
-  {
-    path: "/",
-    name: "Home",
-    component: Home
-  },
-  {
-    path: "/about",
-    name: "About",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/About.vue")
-  }
-];
-
 const router = new VueRouter({
-  routes
+  routes,
+});
+
+router.beforeEach((to, from, next) => {
+  if (to.name == "homeScreen") {
+    store.commit("titlechange", "首页");
+  } else if (to.name == "dynamic") {
+    store.commit("titlechange", "发现世界");
+  } else if (to.name == "travel") {
+    store.commit("titlechange", "行程安排");
+  } else if (to.name == "me") {
+    store.commit("titlechange", "个人中心");
+  }
+  next();
 });
 
 export default router;
