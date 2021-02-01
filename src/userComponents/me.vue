@@ -1,10 +1,21 @@
 <template>
-  <div class="app">个人中心</div>
+  <div class="app">
+    <nologin v-if="false" />
+    <login v-if="false" />
+    <person />
+  </div>
 </template>
 
 <script>
+import nologin from "./Model/nologin"
+import login from "./Model/login"
+import person from "./Model/person"
 export default {
-  name: "",
+  components: {
+    nologin,
+    login,
+    person
+  },
   data() {
     return {};
   },
@@ -17,8 +28,11 @@ export default {
 <style scoped>
 .app {
   width: 100%;
-  background: orange;
+  height: 360px;
   position: fixed;
   margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 </style>

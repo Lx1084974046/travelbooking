@@ -45,7 +45,6 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: rgba(235, 232, 232, 0.3);
   position: fixed;
   margin-top: 50px;
 }

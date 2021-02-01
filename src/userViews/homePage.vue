@@ -1,5 +1,5 @@
 <template>
-  <div class="app">
+  <div class="App">
     <topTab />
     <transition>
       <router-view />
@@ -26,6 +26,10 @@ export default {
 </script>
 
 <style scoped>
+.App {
+  height: 100%;
+  background-color: #efeff4;
+}
 .v-enter {
   opacity: 0.3;
   transform: translateX(100%);
