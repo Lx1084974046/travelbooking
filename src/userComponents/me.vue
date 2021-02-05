@@ -1,8 +1,11 @@
 <template>
   <div class="app">
-    <nologin v-if="false" />
-    <login v-if="false" />
-    <person />
+    <transition>
+      <nologin v-if="this.no_login" @goLogin="goLogin" />
+      <login v-if="this.lo_gin" @goPerson="goPerson" />
+      <person v-if="this.per_son" />
+      <register v-if="this.re_gister" @goLogin="goLogin" />
+    </transition>
   </div>
 </template>
 
@@ -10,18 +13,35 @@
 import nologin from "./Model/nologin"
 import login from "./Model/login"
 import person from "./Model/person"
+import register from "./Model/register"
+import { mapState, mapMutations } from "vuex"
 export default {
   components: {
     nologin,
     login,
-    person
+    person,
+    register
   },
   data() {
-    return {};
+    return {
+    };
   },
-  computed: {},
+  computed: {
+    ...mapState(["no_login", "lo_gin", "per_son", "re_gister"])
+  },
   watch: {},
-  methods: {},
+  methods: {
+    ...mapMutations(["no_loginchange", "lo_ginchange", "per_sonchange", "re_gisterchange"]),
+    goLogin() {
+      this.$router.push({ path: "/userHome/me/login" })
+    },
+    goPerson() {
+      this.$router.push({ path: "/userHome/me/person" })
+    },
+    goRegister() {
+      this.$router.push({ path: "/userHome/me/register" })
+    }
+  },
 };
 </script>
 
@@ -34,5 +54,19 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
+}
+.v-enter {
+  opacity: 0.3;
+  transform: translateX(100%);
+}
+.v-leave-to {
+  opacity: 0.3;
+  transform: translateX(-100%);
+  position: absolute;
+}
+.v-enter-active,
+.v-leave-active {
+  transition: all 0.5s ease;
 }
 </style>

@@ -10,13 +10,13 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  if (to.name == "homeScreen") {
+  if (to.path.search("home") != -1) {
     store.commit("titlechange", "首页");
-  } else if (to.name == "dynamic") {
+  } else if (to.path.search("dynamic") != -1) {
     store.commit("titlechange", "发现世界");
-  } else if (to.name == "travel") {
+  } else if (to.path.search("travel") != -1) {
     store.commit("titlechange", "行程安排");
-  } else if (to.name == "me") {
+  } else if (to.path.search("me") != -1) {
     store.commit("titlechange", "个人中心");
   }
   next();

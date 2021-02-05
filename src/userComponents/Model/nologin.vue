@@ -1,11 +1,14 @@
 <template>
   <div class="app">
     <i></i>
-    <el-row> <el-button type="primary">未登录</el-button></el-row>
+    <el-row>
+      <el-button type="primary" @click="goToLogin">未登录</el-button></el-row
+    >
   </div>
 </template>
 
 <script>
+import store from "@/store";
 export default {
   name: '',
   data() {
@@ -16,7 +19,13 @@ export default {
   },
   watch: {
   },
-  methods: {},
+  methods: {
+    goToLogin() {
+      this.$emit('goLogin')
+      store.commit('no_loginchange', false)
+      store.commit('lo_ginchange', true)
+    }
+  },
 };
 </script>
 

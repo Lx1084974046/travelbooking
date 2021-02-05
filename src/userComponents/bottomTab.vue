@@ -18,16 +18,16 @@ export default {
   methods: {
     ...mapMutations(["titlechange"]),
     goHome() {
-      this.$router.push({ path: "/home" });
+      this.$router.push({ path: "/userHome/home" });
     },
     goDynamic() {
-      this.$router.push({ path: "/dynamic" });
+      this.$router.push({ path: "/userHome/dynamic" });
     },
     goTravel() {
-      this.$router.push({ path: "/travel" });
+      this.$router.push({ path: "/userHome/travel" });
     },
     goMe() {
-      this.$router.push({ path: "/me" });
+      this.$router.push({ path: "/userHome/me" });
     },
   },
 };
