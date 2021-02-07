@@ -1,31 +1,78 @@
 <template>
   <div class="app">
-    <div class="in">
-      <label for="">账号：</label>
-      <el-input type="text" v-model="input" placeholder="请输入账号" clearable>
-      </el-input>
-      <label for="">密码：</label>
-      <el-input
-        placeholder="请输入密码"
-        v-model="input"
-        show-password
-      ></el-input>
-    </div>
-    <div class="btn">
-      <el-row>
-        <el-button type="primary">注册</el-button>
-        <el-button type="success">登录</el-button>
-      </el-row>
-    </div>
+    <el-form
+      :model="form"
+      :rules="rules"
+      ref="form"
+      label-width="40px"
+      class="demo-ruleForm"
+    >
+      <el-form-item label="账号" prop="account">
+        <el-input
+          type="text"
+          v-model="form.account"
+          autocomplete="off"
+        ></el-input>
+      </el-form-item>
+      <el-form-item label="密码" prop="password">
+        <el-input
+          type="password"
+          v-model="form.password"
+          autocomplete="off"
+        ></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="success" @click="goToRegister">注册</el-button>
+        <el-button type="primary" @click="submitForm('form')">登录</el-button>
+      </el-form-item>
+    </el-form>
   </div>
 </template>
 
 <script>
+import store from "@/store";
 export default {
   name: '',
   data() {
+    var checkAccount = (rule, value, callback) => {
+      var reg = /^[0-9a-zA-Z]+$/
+      if (value == '') {
+        return callback(new Error('账号不能为空'))
+      }
+      else if (value.length != 9) {
+        return callback(new Error('账号应该为9位'))
+      } else if (!reg.test(value)) {
+        return callback(new Error('账号中只能包含字母和数字'))
+      } else {
+        callback()
+      }
+    };
+    var checkPassword = (rule, value, callback) => {
+      var reg = /^[0-9a-zA-Z]+$/
+      if (value == '') {
+        return callback(new Error('密码不能为空'))
+      }
+      else if (!reg.test(value)) {
+        return callback(new Error('密码中只能包含字母和数字'))
+      } else if (value.length < 6 || value.length > 9) {
+        return callback(new Error('密码应该为6～9位'))
+      } else {
+        callback()
+      }
+    };
     return {
-      input: ""
+      form: {
+        account: '',
+        password: ''
+      },
+      rules: {
+        account: [
+          { validator: checkAccount },
+        ],
+        password: [
+          { validator: checkPassword }
+        ]
+      }
     };
   },
   computed: {
@@ -33,7 +80,22 @@ export default {
   watch: {
   },
   methods: {
-  },
+    submitForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          alert('submit!');
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      });
+    },
+    goToRegister() {
+      this.$emit('goPerson')
+      store.commit('lo_ginchange', false)
+      store.commit('re_gisterchange', true)
+    }
+  }
 };
 </script>
 
@@ -43,9 +105,6 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-}
-.in {
-  width: 60%;
 }
 .btn {
   margin-top: 20px;

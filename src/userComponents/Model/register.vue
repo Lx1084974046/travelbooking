@@ -1,34 +1,94 @@
 <template>
   <div class="re">
-    <span>账号注册</span>
-    <div class="cen">
-      <div>
-        <label class="s2" for="zh">用户名称：</label
-        ><input type="text" name="zh" placeholder="请输入用户名" />
-      </div>
-      <div>
-        <label
-          class="s2"
-          v-html="'密&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;码：'"
-          for="pwd"
-        ></label
-        ><input type="password" name="pwd" placeholder="请输入密码" />
-      </div>
-      <div>
-        <label for="repwd">确认密码：</label
-        ><input type="password" name="repwd" placeholder="请再次输入密码" />
-      </div>
-    </div>
-    <el-button type="primary">注册</el-button>
+    <el-form
+      :model="form"
+      :rules="rules"
+      ref="form"
+      label-width="80px"
+      class="demo-ruleForm"
+    >
+      <el-form-item label="账号" prop="account">
+        <el-input
+          type="text"
+          v-model="form.account"
+          autocomplete="off"
+        ></el-input>
+      </el-form-item>
+      <el-form-item label="密码" prop="password">
+        <el-input
+          type="password"
+          v-model="form.password"
+          autocomplete="off"
+        ></el-input>
+      </el-form-item>
+      <el-form-item label="确认密码" prop="repassword">
+        <el-input
+          type="password"
+          v-model="form.repassword"
+          autocomplete="off"
+        ></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="success" @click="submitForm('form')">注册</el-button>
+      </el-form-item>
+    </el-form>
   </div>
 </template>
 
 <script>
-
 export default {
   name: '',
   data() {
+    var checkAccount = (rule, value, callback) => {
+      var reg = /^[0-9a-zA-Z]+$/
+      if (value == '') {
+        return callback(new Error('账号不能为空'))
+      }
+      else if (value.length != 9) {
+        return callback(new Error('账号应该为9位'))
+      } else if (!reg.test(value)) {
+        return callback(new Error('账号中只能包含字母和数字'))
+      } else {
+        callback()
+      }
+    };
+    var checkPassword = (rule, value, callback) => {
+      var reg = /^[0-9a-zA-Z]+$/
+      if (value == '') {
+        return callback(new Error('密码不能为空'))
+      }
+      else if (!reg.test(value)) {
+        return callback(new Error('密码中只能包含字母和数字'))
+      } else if (value.length < 6 || value.length > 9) {
+        return callback(new Error('密码应该为6～9位'))
+      } else {
+        callback()
+      }
+    };
+    var checkRepassword = (rule, value, callback) => {
+      if (value != this.form.password) {
+        return callback(new Error('两次密码输入不一致'))
+      } else {
+        callback()
+      }
+    }
     return {
+      form: {
+        account: '',
+        password: '',
+        repassword: ''
+      },
+      rules: {
+        account: [
+          { validator: checkAccount }
+        ],
+        password: [
+          { validator: checkPassword }
+        ],
+        repassword: [
+          { validator: checkRepassword }
+        ]
+      }
     };
   },
   computed: {
@@ -36,7 +96,19 @@ export default {
   },
   watch: {
   },
-  methods: {},
+  methods: {
+    submitForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          console.log(1)
+          alert('submit!');
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      });
+    },
+  },
 };
 </script>
 
