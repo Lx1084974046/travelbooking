@@ -10,37 +10,41 @@
 </template>
 
 <script>
-import nologin from "./Model/nologin"
-import login from "./Model/login"
-import person from "./Model/person"
-import register from "./Model/register"
-import { mapState, mapMutations } from "vuex"
+import nologin from "./Model/nologin";
+import login from "./Model/login";
+import person from "./Model/person";
+import register from "./Model/register";
+import { mapState, mapMutations } from "vuex";
 export default {
   components: {
     nologin,
     login,
     person,
-    register
+    register,
   },
   data() {
-    return {
-    };
+    return {};
   },
   computed: {
-    ...mapState(["no_login", "lo_gin", "per_son", "re_gister"])
+    ...mapState(["no_login", "lo_gin", "per_son", "re_gister"]),
   },
   watch: {},
   methods: {
-    ...mapMutations(["no_loginchange", "lo_ginchange", "per_sonchange", "re_gisterchange"]),
+    ...mapMutations([
+      "no_loginchange",
+      "lo_ginchange",
+      "per_sonchange",
+      "re_gisterchange",
+    ]),
     goLogin() {
-      this.$router.push({ path: "/userHome/me/login" })
+      this.$router.push({ path: "/userHome/me/login" });
     },
     goPerson() {
-      this.$router.push({ path: "/userHome/me/person" })
+      this.$router.push({ path: "/userHome/me/person" });
     },
     goRegister() {
-      this.$router.push({ path: "/userHome/me/register" })
-    }
+      this.$router.push({ path: "/userHome/me/register" });
+    },
   },
 };
 </script>

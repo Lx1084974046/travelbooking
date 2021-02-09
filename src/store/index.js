@@ -6,7 +6,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     title: "",
-    no_login: true,
+    no_login: false,
     lo_gin: false,
     per_son: false,
     re_gister: false,

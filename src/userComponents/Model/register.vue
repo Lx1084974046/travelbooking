@@ -37,77 +37,74 @@
 
 <script>
 export default {
-  name: '',
+  name: "",
   data() {
     var checkAccount = (rule, value, callback) => {
-      var reg = /^[0-9a-zA-Z]+$/
-      if (value == '') {
-        return callback(new Error('账号不能为空'))
-      }
-      else if (value.length != 9) {
-        return callback(new Error('账号应该为9位'))
+      var reg = /^[0-9a-zA-Z]+$/;
+      if (value == "") {
+        return callback(new Error("账号不能为空"));
+      } else if (value.length != 9) {
+        return callback(new Error("账号应该为9位"));
       } else if (!reg.test(value)) {
-        return callback(new Error('账号中只能包含字母和数字'))
+        return callback(new Error("账号中只能包含字母和数字"));
       } else {
-        callback()
+        callback();
       }
     };
     var checkPassword = (rule, value, callback) => {
-      var reg = /^[0-9a-zA-Z]+$/
-      if (value == '') {
-        return callback(new Error('密码不能为空'))
-      }
-      else if (!reg.test(value)) {
-        return callback(new Error('密码中只能包含字母和数字'))
+      var reg = /^[0-9a-zA-Z]+$/;
+      if (value == "") {
+        return callback(new Error("密码不能为空"));
+      } else if (!reg.test(value)) {
+        return callback(new Error("密码中只能包含字母和数字"));
       } else if (value.length < 6 || value.length > 9) {
-        return callback(new Error('密码应该为6～9位'))
+        return callback(new Error("密码应该为6～9位"));
       } else {
-        callback()
+        callback();
       }
     };
     var checkRepassword = (rule, value, callback) => {
       if (value != this.form.password) {
-        return callback(new Error('两次密码输入不一致'))
+        return callback(new Error("两次密码输入不一致"));
       } else {
-        callback()
-      }
-    }
-    return {
-      form: {
-        account: '',
-        password: '',
-        repassword: ''
-      },
-      rules: {
-        account: [
-          { validator: checkAccount }
-        ],
-        password: [
-          { validator: checkPassword }
-        ],
-        repassword: [
-          { validator: checkRepassword }
-        ]
+        callback();
       }
     };
+    return {
+      form: {
+        account: "",
+        password: "",
+        repassword: "",
+      },
+      rules: {
+        account: [{ validator: checkAccount }],
+        password: [{ validator: checkPassword }],
+        repassword: [{ validator: checkRepassword }],
+      },
+    };
   },
-  computed: {
-
-  },
-  watch: {
-  },
+  computed: {},
+  watch: {},
   methods: {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          console.log(1)
-          alert('submit!');
+          console.log(1);
+          alert("submit!");
         } else {
-          console.log('error submit!!');
+          console.log("error submit!!");
           return false;
         }
       });
     },
+  },
+  beforeRouteEnter(to, from, next) {
+    store.commit("Re_gisterchange", true);
+    next();
+  },
+  beforeRouteLeave(to, from, next) {
+    store.commit("no_loginchange", false);
+    next();
   },
 };
 </script>
