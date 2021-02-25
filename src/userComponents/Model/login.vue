@@ -85,15 +85,11 @@ export default {
       });
     },
     goToRegister() {
-      this.$emit("goPerson");
+      this.$emit("goRegister");
     },
   },
   beforeRouteEnter(to, from, next) {
-    store.commit("lo_ginchange", true);
-    next();
-  },
-  beforeRouteLeave(to, from, next) {
-    store.commit("lo_ginchange", false);
+    store.commit("loginchange", true);
     next();
   },
 };

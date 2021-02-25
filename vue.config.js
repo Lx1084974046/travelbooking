@@ -1,5 +1,8 @@
 module.exports = {
-  lintOnSave: true,
+  lintOnSave: false,
+  configureWebpack: config => {
+    config.devtool = "source-map";
+  },
   css: {
     loaderOptions: {
       postcss: {
@@ -22,6 +25,18 @@ module.exports = {
             landscapeUnit: "vw", // 横屏时使用的单位
           }),
         ],
+      },
+    },
+  },
+  devServer: {
+    open: true, //自动打开浏览器
+    proxy: {
+      "/api": {
+        target: "http://localhost:3000/", //后端的接口地址
+        changeOrigin: true, //开启跨域
+        pathRewrite: {
+          "^/api": "", //这里即为重写后的地址，baseURL里的地址要换成这个
+        },
       },
     },
   },

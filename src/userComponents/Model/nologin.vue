@@ -15,20 +15,13 @@ export default {
     return {};
   },
   computed: {},
-  watch: {},
   methods: {
     goToLogin() {
       this.$emit("goLogin");
     },
   },
   beforeRouteEnter(to, from, next) {
-    console.log(1);
-    store.commit("no_loginchange", true);
-    next();
-  },
-  beforeRouteLeave(to, from, next) {
-    console.log(2);
-    store.commit("no_loginchange", false);
+    store.commit("nologinchange", true);
     next();
   },
 };

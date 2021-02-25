@@ -36,6 +36,9 @@
 </template>
 
 <script>
+import store from "@/store";
+import { mapMutations } from "vuex";
+import { userRegister, userFind } from "@/api/index.js";
 export default {
   name: "",
   data() {
@@ -86,11 +89,50 @@ export default {
   computed: {},
   watch: {},
   methods: {
+    ...mapMutations([
+      "dialogshowchange",
+      "dialogtitlechange",
+      "dialogcontentchange",
+      "dialogbuttonchange",
+    ]),
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          console.log(1);
-          alert("submit!");
+          userFind({ account: this.form.account })
+            .then((res) => {
+              if (res.data === true) {
+                this.dialogtitlechange("账号已被使用");
+                this.dialogcontentchange("请重新设置账号");
+                this.dialogbuttonchange("确认");
+                this.dialogshowchange(true);
+              } else {
+                userRegister(this.form)
+                  .then((res) => {
+                    if (res.data === true) {
+                      this.dialogtitlechange("注册成功");
+                      this.dialogcontentchange("请前往登录");
+                      this.dialogbuttonchange("登录");
+                      this.dialogshowchange(true);
+                    } else {
+                      this.dialogtitlechange("注册失败");
+                      this.dialogcontentchange("请重新注册");
+                      this.dialogbuttonchange("确认");
+                      this.dialogshowchange(true);
+                    }
+                  })
+                  .catch((error) => {
+                    //此处捕获到的异常会被外层catch捕获，之后此处捕获异常失效
+                    console.log(error);
+                  });
+              }
+            })
+            .catch((error) => {
+              //捕获异常(包括被包含的catch)
+              this.dialogtitlechange("Error");
+              this.dialogcontentchange(error);
+              this.dialogbuttonchange("确认");
+              this.dialogshowchange(true);
+            });
         } else {
           console.log("error submit!!");
           return false;
@@ -99,11 +141,7 @@ export default {
     },
   },
   beforeRouteEnter(to, from, next) {
-    store.commit("Re_gisterchange", true);
-    next();
-  },
-  beforeRouteLeave(to, from, next) {
-    store.commit("no_loginchange", false);
+    store.commit("registerchange", true);
     next();
   },
 };

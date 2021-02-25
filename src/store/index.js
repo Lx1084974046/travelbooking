@@ -6,27 +6,43 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     title: "",
-    no_login: false,
-    lo_gin: false,
-    per_son: false,
-    re_gister: false,
+    nologin: false,
+    login: false,
+    person: false,
+    register: false,
+    dialogshow: false,
+    dialogtitle: '',
+    dialogcontent: '',
+    dialogbutton: ''
   },
   mutations: {
     titlechange(state, value) {
       state.title = value;
     },
-    no_loginchange(state, value) {
-      state.no_login = value;
+    nologinchange(state, value) {
+      state.nologin = value;
     },
-    lo_ginchange(state, value) {
-      state.lo_gin = value;
+    loginchange(state, value) {
+      state.login = value;
     },
-    per_sonchange(state, value) {
-      state.per_son = value;
+    personchange(state, value) {
+      state.person = value;
     },
-    re_gisterchange(state, value) {
-      state.re_gister = value;
+    registerchange(state, value) {
+      state.register = value;
     },
+    dialogshowchange(state,value){
+      state.dialogshow = value
+    },
+    dialogtitlechange(state,value){
+      state.dialogtitle = value
+    },
+    dialogcontentchange(state,value){
+      state.dialogcontent = value
+    },
+    dialogbuttonchange(state,value){
+      state.dialogbutton = value
+    }
   },
   actions: {},
   modules: {},

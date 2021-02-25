@@ -1,10 +1,16 @@
 <template>
   <div class="app">
     <transition>
-      <nologin v-if="this.no_login" @goLogin="goLogin" />
-      <login v-if="this.lo_gin" @goPerson="goPerson" />
-      <person v-if="this.per_son" />
-      <register v-if="this.re_gister" @goLogin="goLogin" />
+      <nologin v-if="this.nologin" @goLogin="goLogin" />
+    </transition>
+    <transition>
+      <login v-if="this.login" @goPerson="goPerson" @goRegister="goRegister" />
+    </transition>
+    <transition>
+      <person v-if="this.person" />
+    </transition>
+    <transition>
+      <register v-if="this.register" @goLogin="goLogin" />
     </transition>
   </div>
 </template>
@@ -14,7 +20,7 @@ import nologin from "./Model/nologin";
 import login from "./Model/login";
 import person from "./Model/person";
 import register from "./Model/register";
-import { mapState, mapMutations } from "vuex";
+import { mapState } from "vuex";
 export default {
   components: {
     nologin,
@@ -26,16 +32,12 @@ export default {
     return {};
   },
   computed: {
-    ...mapState(["no_login", "lo_gin", "per_son", "re_gister"]),
+    ...mapState(["nologin", "login", "person", "register"]),
   },
-  watch: {},
+  watch: {
+    $route: "closePage",
+  },
   methods: {
-    ...mapMutations([
-      "no_loginchange",
-      "lo_ginchange",
-      "per_sonchange",
-      "re_gisterchange",
-    ]),
     goLogin() {
       this.$router.push({ path: "/userHome/me/login" });
     },
@@ -44,6 +46,9 @@ export default {
     },
     goRegister() {
       this.$router.push({ path: "/userHome/me/register" });
+    },
+    closePage() {
+      console.log(2);
     },
   },
 };

@@ -1,6 +1,9 @@
 <template>
   <div class="App">
     <topTab />
+    <transition name="tips">
+      <tipsModel v-if="this.dialogshow" />
+    </transition>
     <transition>
       <router-view />
     </transition>
@@ -9,8 +12,11 @@
 </template>
 
 <script>
+import store from "@/store";
 import topTab from "@/userComponents/topTab";
 import bottomTab from "@/userComponents/bottomTab";
+import tipsModel from "@/userComponents/Model/tipsModel";
+import { mapState } from "vuex";
 export default {
   data() {
     return {};
@@ -18,9 +24,23 @@ export default {
   components: {
     topTab,
     bottomTab,
+    tipsModel,
   },
-  computed: {},
-  watch: {},
+  computed: {
+    ...mapState(["dialogshow"]),
+  },
+  watch: {
+    $route(to, from) {
+      //只能监听子路由变化，无法监听同级或父级路由变化，要全局监听在App.vue文件中监听
+      if (from.name == "nologin") {
+        store.commit("nologinchange", false);
+      } else if (from.name == "login") {
+        store.commit("loginchange", false);
+      } else if (from.name == "register") {
+        store.commit("registerchange", false);
+      }
+    },
+  },
   methods: {},
 };
 </script>
@@ -42,5 +62,19 @@ export default {
 .v-enter-active,
 .v-leave-active {
   transition: all 0.5s ease;
+}
+.tips-enter {
+  opacity: 0;
+}
+.tips-leave-to {
+  opacity: 0;
+}
+.tips-enter-active,
+.tips-leave-active {
+  transition: all 0.6s ease;
+}
+.tips {
+  position: absolute;
+  z-index: 999999;
 }
 </style>
