@@ -6,3 +6,7 @@ export const userRegister = params =>
 //查询用户
 export const userFind = params =>
     get('/userFind',params)
+
+//用户登录
+export const userLogin = params =>
+    post('/userLogin',params)

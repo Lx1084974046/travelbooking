@@ -31,6 +31,8 @@
 
 <script>
 import store from "@/store";
+import { mapMutations } from "vuex";
+import { userLogin } from "@/api/index.js";
 export default {
   name: "",
   data() {
@@ -74,10 +76,38 @@ export default {
   computed: {},
   watch: {},
   methods: {
+    ...mapMutations([
+      "dialogshowchange",
+      "dialogtitlechange",
+      "dialogcontentchange",
+      "dialogbuttonchange",
+    ]),
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert("submit!");
+          userLogin(this.form)
+            .then((res) => {
+              if (res.data === true) {
+                localStorage.setExpire(
+                  "token",
+                  JSON.parse(res.config.data).account
+                );
+                this.$router.push({ path: "/userHome/me/person" });
+              } else {
+                this.dialogtitlechange("登录失败");
+                this.dialogcontentchange("账号或密码错误");
+                this.dialogbuttonchange("确认");
+                this.dialogshowchange(true);
+                this.form.account = "";
+                this.form.password = "";
+              }
+            })
+            .catch((error) => {
+              this.dialogtitlechange("Error");
+              this.dialogcontentchange(error);
+              this.dialogbuttonchange("确认");
+              this.dialogshowchange(true);
+            });
         } else {
           console.log("error submit!!");
           return false;

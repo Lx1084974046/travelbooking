@@ -26,7 +26,15 @@ export default {
     closeDialog() {
       store.commit("dialogshowchange", false);
       if (this.dialogbutton == "登录") {
+        if (this.$route.name == "person") {
+          store.commit("personchange", false);
+        }
         this.$router.push({ path: "/userHome/me/login" });
+      }
+      if (this.dialogbutton == "确认" && this.$route.name == "person") {
+        localStorage.removeItem("token");
+        store.commit("personchange", false);
+        this.$router.push({ path: "/userHome/me/nologin" });
       }
     },
   },

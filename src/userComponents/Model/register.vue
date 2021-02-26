@@ -28,6 +28,13 @@
           autocomplete="off"
         ></el-input>
       </el-form-item>
+      <el-form-item label="身份证号" prop="IDcard">
+        <el-input
+          type="text"
+          v-model="form.IDcard"
+          autocomplete="off"
+        ></el-input>
+      </el-form-item>
       <el-form-item>
         <el-button type="success" @click="submitForm('form')">注册</el-button>
       </el-form-item>
@@ -73,16 +80,26 @@ export default {
         callback();
       }
     };
+    var checkIDcard = (rule, value, callback) => {
+      var reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
+      if (!reg.test(value)) {
+        return callback(new Error("输入内容不符合身份证格式"));
+      } else {
+        callback();
+      }
+    };
     return {
       form: {
         account: "",
         password: "",
         repassword: "",
+        IDcard: "",
       },
       rules: {
         account: [{ validator: checkAccount }],
         password: [{ validator: checkPassword }],
         repassword: [{ validator: checkRepassword }],
+        IDcard: [{ validator: checkIDcard }],
       },
     };
   },
@@ -96,16 +113,13 @@ export default {
       "dialogbuttonchange",
     ]),
     submitForm(formName) {
+      console.log(1);
       this.$refs[formName].validate((valid) => {
         if (valid) {
           userFind({ account: this.form.account })
             .then((res) => {
-              if (res.data === true) {
-                this.dialogtitlechange("账号已被使用");
-                this.dialogcontentchange("请重新设置账号");
-                this.dialogbuttonchange("确认");
-                this.dialogshowchange(true);
-              } else {
+              console.log(res.data);
+              if (res.data === false) {
                 userRegister(this.form)
                   .then((res) => {
                     if (res.data === true) {
@@ -124,6 +138,11 @@ export default {
                     //此处捕获到的异常会被外层catch捕获，之后此处捕获异常失效
                     console.log(error);
                   });
+              } else {
+                this.dialogtitlechange("账号已被使用");
+                this.dialogcontentchange("请重新设置账号");
+                this.dialogbuttonchange("确认");
+                this.dialogshowchange(true);
               }
             })
             .catch((error) => {
@@ -154,6 +173,7 @@ export default {
   justify-content: center;
   align-items: center;
   width: 100%;
+  margin-top: 50px;
 }
 span {
   font-size: 20px;
