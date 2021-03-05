@@ -30,7 +30,7 @@ export default [
         component: () => import("../userComponents/me"),
         children: [
           {
-            path: "nologin",
+            path: "nologin",//*路径名应与实际路径一致
             name: "nologin",
             component: () => import("../userComponents/Model/nologin"),
           },
@@ -49,6 +49,11 @@ export default [
             name: "person",
             component: () => import("../userComponents/Model/person"),
           },
+          {
+            path: "updateperson",
+            name: "updateperson",
+            component: () => import("../userComponents/Model/updateperson"),
+          }
         ],
       },
     ],

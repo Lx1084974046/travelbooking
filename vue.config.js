@@ -31,10 +31,11 @@ module.exports = {
   devServer: {
     open: true, //自动打开浏览器
     proxy: {
-      "/api": {
+      //只适用于开发环境
+      "/api": {//告诉node只有/api开头的接口才用代理http://localhost:3000/api/1
         target: "http://localhost:3000/", //后端的接口地址
-        changeOrigin: true, //开启跨域
-        pathRewrite: {
+        changeOrigin: true, //开启本地虚拟服务器
+        pathRewrite: {//去掉请求路径中的/api(真实路径中没有/api)http://localhost:3000/1
           "^/api": "", //这里即为重写后的地址，baseURL里的地址要换成这个
         },
       },

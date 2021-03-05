@@ -3,9 +3,14 @@
     <div class="tipsmodel">
       <div class="tit">{{ this.dialogtitle }}</div>
       <span>{{ this.dialogcontent }}</span>
-      <el-button @click="closeDialog" type="primary">{{
-        this.dialogbutton
-      }}</el-button>
+      <div class="btn">
+        <el-button @click="closeDialog" type="primary">{{
+          this.dialogbutton
+        }}</el-button>
+        <el-button @click="cancel" type="success" v-if="this.returns"
+          >返回</el-button
+        >
+      </div>
     </div>
   </div>
 </template>
@@ -19,23 +24,23 @@ export default {
     return {};
   },
   computed: {
-    ...mapState(["dialogtitle", "dialogcontent", "dialogbutton"]),
+    ...mapState(["dialogtitle", "dialogcontent", "dialogbutton", "returns"]),
   },
   watch: {},
   methods: {
     closeDialog() {
       store.commit("dialogshowchange", false);
       if (this.dialogbutton == "登录") {
-        if (this.$route.name == "person") {
-          store.commit("personchange", false);
-        }
         this.$router.push({ path: "/userHome/me/login" });
       }
       if (this.dialogbutton == "确认" && this.$route.name == "person") {
         localStorage.removeItem("token");
-        store.commit("personchange", false);
         this.$router.push({ path: "/userHome/me/nologin" });
       }
+    },
+    cancel() {
+      store.commit("dialogshowchange", false);
+      store.commit("dialogreturnsbuttonchange", false);
     },
   },
 };
@@ -68,5 +73,9 @@ export default {
 }
 span {
   text-align: center;
+}
+.btn {
+  display: flex;
+  justify-content: center;
 }
 </style>

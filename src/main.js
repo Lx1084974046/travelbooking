@@ -15,7 +15,7 @@ Storage.prototype.setExpire=(key, value) =>{
   let obj={
       data:value,
       time:Date.now(),
-      expire:300000    //设置过期时间
+      expire:600000    //设置过期时间ms
   };
   localStorage.setItem(key,JSON.stringify(obj));
 }

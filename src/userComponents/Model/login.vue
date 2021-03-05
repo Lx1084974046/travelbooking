@@ -22,7 +22,7 @@
         ></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="success" @click="goToRegister">注册</el-button>
+        <el-button type="success" @click="goRegister">注册</el-button>
         <el-button type="primary" @click="submitForm('form')">登录</el-button>
       </el-form-item>
     </el-form>
@@ -30,7 +30,6 @@
 </template>
 
 <script>
-import store from "@/store";
 import { mapMutations } from "vuex";
 import { userLogin } from "@/api/index.js";
 export default {
@@ -114,13 +113,9 @@ export default {
         }
       });
     },
-    goToRegister() {
-      this.$emit("goRegister");
+    goRegister() {
+      this.$router.push({ path: "/userHome/me/register" });
     },
-  },
-  beforeRouteEnter(to, from, next) {
-    store.commit("loginchange", true);
-    next();
   },
 };
 </script>

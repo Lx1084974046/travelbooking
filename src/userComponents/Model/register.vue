@@ -28,13 +28,19 @@
           autocomplete="off"
         ></el-input>
       </el-form-item>
-      <el-form-item label="身份证号" prop="IDcard">
+      <el-form-item label="性别" prop="sex">
+        <el-radio-group v-model="form.sex">
+          <el-radio label="男"></el-radio>
+          <el-radio label="女"></el-radio>
+        </el-radio-group>
+      </el-form-item>
+      <!-- <el-form-item label="身份证号" prop="IDcard">
         <el-input
           type="text"
           v-model="form.IDcard"
           autocomplete="off"
         ></el-input>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item>
         <el-button type="success" @click="submitForm('form')">注册</el-button>
       </el-form-item>
@@ -43,12 +49,12 @@
 </template>
 
 <script>
-import store from "@/store";
 import { mapMutations } from "vuex";
 import { userRegister, userFind } from "@/api/index.js";
 export default {
   name: "",
   data() {
+    //自定义表单验证
     var checkAccount = (rule, value, callback) => {
       var reg = /^[0-9a-zA-Z]+$/;
       if (value == "") {
@@ -80,26 +86,30 @@ export default {
         callback();
       }
     };
-    var checkIDcard = (rule, value, callback) => {
-      var reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
-      if (!reg.test(value)) {
-        return callback(new Error("输入内容不符合身份证格式"));
-      } else {
-        callback();
-      }
-    };
+    // var checkIDcard = (rule, value, callback) => {
+    //   var reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
+    //   if (!reg.test(value)) {
+    //     return callback(new Error("输入内容不符合身份证格式"));
+    //   } else {
+    //     callback();
+    //   }
+    // };
     return {
       form: {
         account: "",
         password: "",
         repassword: "",
-        IDcard: "",
+        // IDcard: "",
+        sex: "",
       },
       rules: {
+        //自定义
         account: [{ validator: checkAccount }],
         password: [{ validator: checkPassword }],
         repassword: [{ validator: checkRepassword }],
-        IDcard: [{ validator: checkIDcard }],
+        // IDcard: [{ validator: checkIDcard }],
+        //自带表单验证
+        sex: [{ required: true, message: "请选择性别", trigger: "change" }],
       },
     };
   },
@@ -158,10 +168,6 @@ export default {
         }
       });
     },
-  },
-  beforeRouteEnter(to, from, next) {
-    store.commit("registerchange", true);
-    next();
   },
 };
 </script>

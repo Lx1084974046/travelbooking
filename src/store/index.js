@@ -6,30 +6,16 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     title: "",
-    nologin: false,
-    login: false,
-    person: false,
-    register: false,
     dialogshow: false,
     dialogtitle: '',
     dialogcontent: '',
-    dialogbutton: ''
+    dialogbutton: '',
+    returns: false,
+    updateshow: false
   },
   mutations: {
     titlechange(state, value) {
       state.title = value;
-    },
-    nologinchange(state, value) {
-      state.nologin = value;
-    },
-    loginchange(state, value) {
-      state.login = value;
-    },
-    personchange(state, value) {
-      state.person = value;
-    },
-    registerchange(state, value) {
-      state.register = value;
     },
     dialogshowchange(state,value){
       state.dialogshow = value
@@ -42,7 +28,13 @@ export default new Vuex.Store({
     },
     dialogbuttonchange(state,value){
       state.dialogbutton = value
-    }
+    },
+    dialogreturnsbuttonchange(state,value){
+      state.returns = value
+    },
+    updateshowchange(state, value) {
+      state.updateshow = value;
+    },
   },
   actions: {},
   modules: {},

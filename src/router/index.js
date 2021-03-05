@@ -18,7 +18,7 @@ router.beforeEach((to, from, next) => {
     store.commit("titlechange", "行程安排");
   } else if (to.path.search("me") != -1) {
     store.commit("titlechange", "个人中心");
-  } 
+  }
   next();
   // if(to.name == 'nologin'){    //路由匹配
   //   store.commit('no_loginchange',true)

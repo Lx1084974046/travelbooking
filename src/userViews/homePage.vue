@@ -29,18 +29,7 @@ export default {
   computed: {
     ...mapState(["dialogshow"]),
   },
-  watch: {
-    $route(to, from) {
-      //只能监听子路由变化，无法监听同级或父级路由变化，要全局监听在App.vue文件中监听
-      if (from.name == "nologin") {
-        store.commit("nologinchange", false);
-      } else if (from.name == "login") {
-        store.commit("loginchange", false);
-      } else if (from.name == "register") {
-        store.commit("registerchange", false);
-      }
-    },
-  },
+  watch: {}, //$route只能监听子路由变化，无法监听同级或父级路由变化，要全局监听在App.vue文件中监听
   methods: {},
 };
 </script>

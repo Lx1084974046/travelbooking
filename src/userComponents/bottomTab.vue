@@ -8,6 +8,7 @@
 </template>
 
 <script>
+import store from "@/store";
 import { mapMutations } from "vuex";
 export default {
   data() {
@@ -18,16 +19,23 @@ export default {
   methods: {
     ...mapMutations(["titlechange"]),
     goHome() {
+      store.commit("updateshowchange", false);
       this.$router.push({ path: "/userHome/home" });
     },
     goDynamic() {
+      store.commit("updateshowchange", false);
       this.$router.push({ path: "/userHome/dynamic" });
     },
     goTravel() {
+      store.commit("updateshowchange", false);
       this.$router.push({ path: "/userHome/travel" });
     },
     goMe() {
-      this.$router.push({ path: "/userHome/me" });
+      if (localStorage.getExpire("token")) {
+        this.$router.push({ path: "/userHome/me/person" });
+      } else {
+        this.$router.push({ path: "/userHome/me" });
+      }
     },
   },
 };

@@ -2,7 +2,7 @@
   <div class="app">
     <i></i>
     <el-row>
-      <el-button type="primary" @click="goToLogin">未登录</el-button></el-row
+      <el-button type="primary" @click="goLogin">未登录</el-button></el-row
     >
   </div>
 </template>
@@ -16,13 +16,9 @@ export default {
   },
   computed: {},
   methods: {
-    goToLogin() {
-      this.$emit("goLogin");
+    goLogin() {
+      this.$router.push({ path: "/userHome/me/login" });
     },
-  },
-  beforeRouteEnter(to, from, next) {
-    store.commit("nologinchange", true);
-    next();
   },
 };
 </script>
