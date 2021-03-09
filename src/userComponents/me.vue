@@ -21,7 +21,6 @@ export default {
   width: 100%;
   height: 360px;
   position: fixed;
-  margin-top: 50px;
   display: flex;
   flex-direction: column;
   align-items: center;

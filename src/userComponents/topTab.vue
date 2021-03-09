@@ -1,5 +1,8 @@
 <template>
-  <div class="app">{{ this.title }}</div>
+  <div class="app">
+    <span v-if="this.returnlogo" @click="returnPerson">&lt;</span>
+    <div>{{ this.title }}</div>
+  </div>
 </template>
 
 <script>
@@ -10,10 +13,14 @@ export default {
     return {};
   },
   computed: {
-    ...mapState(["title"]),
+    ...mapState(["title", "returnlogo"]),
   },
   watch: {},
-  methods: {},
+  methods: {
+    returnPerson() {
+      this.$store.commit("updateshowchange", false);
+    },
+  },
 };
 </script>
 
@@ -28,5 +35,11 @@ export default {
   background-color: #409eff;
   position: fixed;
   top: 0;
+  position: relative;
+}
+span {
+  position: absolute;
+  left: 10px;
+  font-size: 25px;
 }
 </style>

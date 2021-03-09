@@ -46,7 +46,6 @@ export default {
   flex-direction: column;
   align-items: center;
   position: fixed;
-  margin-top: 50px;
 }
 table {
   width: 96%;

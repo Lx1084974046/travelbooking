@@ -34,7 +34,6 @@ export default {
   data() {
     return {
       ID: "123",
-      昵称: "",
       // IDcard: "",
       nickname: "",
       avatar: "",
@@ -112,7 +111,7 @@ export default {
   width: 100%;
   background-color: #fff;
   align-items: center;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
 }
 .btn img {
   width: 90px;
