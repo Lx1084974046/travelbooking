@@ -178,8 +178,7 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 100%;
-  margin-top: 50px;
+  height: 100%;
 }
 span {
   font-size: 20px;

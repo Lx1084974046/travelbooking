@@ -1,5 +1,5 @@
 <template>
-  <div class="tips">
+  <div class="tips" @touchmove.prevent>
     <div class="tipsmodel">
       <div class="tit">{{ this.dialogtitle }}</div>
       <span>{{ this.dialogcontent }}</span>
@@ -49,7 +49,7 @@ export default {
 <style scoped>
 .tips {
   width: 100%;
-  height: 100%;
+  height: 106vh;
   background-color: rgba(0, 0, 0, 0.3);
 }
 .tipsmodel {

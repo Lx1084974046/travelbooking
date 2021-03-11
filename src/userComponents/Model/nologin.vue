@@ -1,5 +1,5 @@
 <template>
-  <div class="app">
+  <div class="app-nologin">
     <i></i>
     <el-row>
       <el-button type="primary" @click="goLogin">未登录</el-button></el-row
@@ -24,6 +24,14 @@ export default {
 </script>
 
 <style scoped>
+.app-nologin {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  margin-bottom: 60px;
+}
 i {
   width: 300px;
   height: 300px;

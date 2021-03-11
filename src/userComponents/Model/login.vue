@@ -1,5 +1,5 @@
 <template>
-  <div class="app">
+  <div class="app-login">
     <el-form
       :model="form"
       :rules="rules"
@@ -121,11 +121,12 @@ export default {
 </script>
 
 <style scoped>
-.app {
+.app-login {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  height: 100%;
 }
 .btn {
   margin-top: 20px;

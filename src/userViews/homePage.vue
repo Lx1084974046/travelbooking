@@ -36,7 +36,7 @@ export default {
 
 <style scoped>
 .App {
-  height: 100%;
+  height: 100vh;
   background-color: #efeff4;
 }
 .v-enter {

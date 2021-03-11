@@ -19,7 +19,7 @@ export default {
 <style scoped>
 .app {
   width: 100%;
-  height: 360px;
+  height: 100%;
   position: fixed;
   display: flex;
   flex-direction: column;

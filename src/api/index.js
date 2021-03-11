@@ -10,3 +10,7 @@ export const userFind = params =>
 //用户登录
 export const userLogin = params =>
     post('/userLogin',params)
+
+//用户信息修改
+export const userUpdate = params =>
+    post('/userUpdate',params)

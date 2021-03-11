@@ -55,6 +55,7 @@ export default {
       "dialogbuttonchange",
       "dialogreturnsbuttonchange",
       "updateshowchange",
+      "returnlogochange",
     ]),
     getUser() {
       //登录后获取用户个人信息
@@ -90,6 +91,7 @@ export default {
     },
     goUpdatePerson() {
       this.updateshowchange(true);
+      this.returnlogochange(true);
     },
   },
   mounted() {
@@ -101,9 +103,11 @@ export default {
 <style scoped>
 .per {
   width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-top: 50px;
 }
 .btn {
   display: flex;

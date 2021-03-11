@@ -19,6 +19,7 @@ export default {
   methods: {
     returnPerson() {
       this.$store.commit("updateshowchange", false);
+      this.$store.commit("returnlogochange", false);
     },
   },
 };
@@ -35,7 +36,7 @@ export default {
   background-color: #409eff;
   position: fixed;
   top: 0;
-  position: relative;
+  z-index: 999;
 }
 span {
   position: absolute;
