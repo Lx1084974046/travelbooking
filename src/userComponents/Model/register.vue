@@ -30,8 +30,8 @@
       </el-form-item>
       <el-form-item label="性别" prop="sex">
         <el-radio-group v-model="form.sex">
-          <el-radio label="男"></el-radio>
-          <el-radio label="女"></el-radio>
+          <el-radio label="0">男</el-radio>
+          <el-radio label="1">女</el-radio>
         </el-radio-group>
       </el-form-item>
       <!-- <el-form-item label="身份证号" prop="IDcard">

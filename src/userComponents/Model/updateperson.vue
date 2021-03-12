@@ -48,11 +48,23 @@ export default {
       if (this.nickname) {
         var form = {
           content: this.nickname,
-          account: localStorage.getExpire("token"),
+          account: localStorage.getExpire("logintoken"),
         };
         userUpdate(form)
           .then((res) => {
-            console.log(res);
+            if (res.data == true) {
+              this.$message({
+                message: "昵称更换成功",
+                type: "success",
+                duration: 600,
+              });
+              localStorage.removeItem("usertoken");
+              setTimeout(function () {
+                location.reload();
+              }, 800);
+            } else {
+              this.$message.error("昵称更换失败");
+            }
           })
           .catch((error) => {
             this.dialogtitlechange("Error");

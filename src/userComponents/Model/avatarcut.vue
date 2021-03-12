@@ -74,12 +74,25 @@ export default {
       if (this.headerImage) {
         var form = {
           content: this.headerImage,
-          account: localStorage.getExpire("token"),
+          account: localStorage.getExpire("logintoken"),
           updatecode: 1,
         };
         userUpdate(form)
           .then((res) => {
-            console.log(res);
+            if (res.data == true) {
+              this.$message({
+                message: "头像更换成功",
+                type: "success",
+                duration: 600,
+              });
+              //服务器用户信息修改，移除本地缓存的用户信息，让页面重新请求用户信息
+              localStorage.removeItem("usertoken");
+              setTimeout(function () {
+                location.reload();
+              }, 800);
+            } else {
+              this.$message.error("头像更换失败");
+            }
           })
           .catch((error) => {
             this.dialogtitlechange("Error");
@@ -131,8 +144,8 @@ export default {
       }
       // Crop
       croppedCanvas = this.cropper.getCroppedCanvas();
-      console.log(this.cropper);
-      console.log(1);
+      // console.log(this.cropper);
+      // console.log(1);
       // Round
       roundedCanvas = this.getRoundedCanvas(croppedCanvas);
 

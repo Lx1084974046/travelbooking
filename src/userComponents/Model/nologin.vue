@@ -30,7 +30,6 @@ export default {
   justify-content: center;
   align-items: center;
   height: 100%;
-  margin-bottom: 60px;
 }
 i {
   width: 300px;

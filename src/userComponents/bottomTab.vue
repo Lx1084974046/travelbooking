@@ -31,7 +31,7 @@ export default {
       this.$router.push({ path: "/userHome/travel" });
     },
     goMe() {
-      if (localStorage.getExpire("token")) {
+      if (localStorage.getExpire("logintoken")) {
         this.$router.push({ path: "/userHome/me/person" });
       } else {
         this.$router.push({ path: "/userHome/me" });

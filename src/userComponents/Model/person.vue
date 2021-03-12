@@ -58,28 +58,65 @@ export default {
       "returnlogochange",
     ]),
     getUser() {
-      //登录后获取用户个人信息
-      if (localStorage.getExpire("token") == null) {
+      //判断是否登录
+      if (localStorage.getExpire("logintoken") == null) {
         this.dialogtitlechange("身份信息过期");
         this.dialogcontentchange("请重新登录");
         this.dialogbuttonchange("登录");
         this.dialogshowchange(true);
       } else {
-        userFind({ account: localStorage.getExpire("token") })
-          .then((res) => {
-            console.log(1111);
-            console.log(res.data);
-            this.ID = res.data[0].user_Account;
-            this.sex = res.data[0].user_sex;
-            this.nickname = res.data[0].user_nickname;
-            this.avatar = "http://localhost:3000" + res.data[0].user_avatar;
-          }) //访问 localhost 的 net::ERR_UNKNOWN_URL_SCHEME 问题 解决方案是在 localhost 前面加上协议名：http://
-          .catch((error) => {
-            this.dialogtitlechange("Error");
-            this.dialogcontentchange(error);
-            this.dialogbuttonchange("关闭");
-            this.dialogshowchange(true);
-          });
+        //登录后获取用户个人信息
+        //首次登录请求登录接口
+        if (localStorage.getExpire("usertoken") == null) {
+          console.log(111111111);
+          userFind({ account: localStorage.getExpire("logintoken") })
+            .then((res) => {
+              console.log(1111);
+              console.log(res.data);
+              //将APi返回的用户信息存储到本地，减少接口请求次数
+              localStorage.setExpire("usertoken", res.data[0]);
+              this.ID = res.data[0].user_Account;
+              if (res.data[0].user_sex == 0) {
+                this.sex = "男";
+              } else {
+                this.sex = "女";
+              }
+              if (res.data[0].user_nickname == 0) {
+                this.nickname = "未设置";
+              } else {
+                this.nickname = res.data[0].user_nickname;
+              }
+              this.avatar =
+                "http://localhost:3000" +
+                "/public/src/img/avatars/" +
+                res.data[0].user_avatar;
+            }) //访问 localhost 的 net::ERR_UNKNOWN_URL_SCHEME 问题 解决方案是在 localhost 前面加上协议名：http://
+            .catch((error) => {
+              this.dialogtitlechange("Error");
+              this.dialogcontentchange(error);
+              this.dialogbuttonchange("关闭");
+              this.dialogshowchange(true);
+            });
+        } else {
+          //根据本地存储的用户信息渲染页面
+          var userInfo = localStorage.getExpire("usertoken");
+          console.log(userInfo);
+          this.ID = userInfo.user_Account;
+          if (userInfo.user_sex == 0) {
+            this.sex = "男";
+          } else {
+            this.sex = "女";
+          }
+          if (userInfo.user_nickname == 0) {
+            this.nickname = "未设置";
+          } else {
+            this.nickname = userInfo.user_nickname;
+          }
+          this.avatar =
+            "http://localhost:3000" +
+            "/public/src/img/avatars/" +
+            userInfo.user_avatar;
+        }
       }
     },
     loginout() {

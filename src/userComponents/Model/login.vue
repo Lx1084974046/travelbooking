@@ -88,7 +88,7 @@ export default {
             .then((res) => {
               if (res.data === true) {
                 localStorage.setExpire(
-                  "token",
+                  "logintoken",
                   JSON.parse(res.config.data).account
                 );
                 this.$router.push({ path: "/userHome/me/person" });

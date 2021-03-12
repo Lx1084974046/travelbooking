@@ -34,7 +34,8 @@ export default {
         this.$router.push({ path: "/userHome/me/login" });
       }
       if (this.dialogbutton == "确认" && this.$route.name == "person") {
-        localStorage.removeItem("token");
+        localStorage.removeItem("logintoken");
+        localStorage.removeItem("usertoken");
         this.$router.push({ path: "/userHome/me/nologin" });
       }
     },
