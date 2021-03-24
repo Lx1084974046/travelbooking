@@ -11,9 +11,20 @@
       <input type="text" placeholder="北京" />
     </div>
     <div class="date">
-      <span>日期</span>
+      <el-date-picker
+        v-model="date"
+        type="date"
+        placeholder="选择日期"
+        :editable="false"
+        :clearable="false"
+        align="center"
+        :picker-options="pickerOptions"
+        @focus="focus"
+        @blur="blur"
+      >
+      </el-date-picker>
     </div>
-    <div class="btn">搜索</div>
+    <div class="btn" @click="query">搜索</div>
   </div>
 </template>
 
@@ -21,11 +32,32 @@
 export default {
   name: "",
   data() {
-    return {};
+    return {
+      date: "",
+      pickerOptions: {
+        disabledDate(time) {
+          return time.getTime() < Date.now() - 8.64e7; // - 8.64e7 表示可选择当天时间
+        },
+      },
+    };
   },
   computed: {},
   watch: {},
-  methods: {},
+  methods: {
+    focus() {
+      console.log("123");
+      document.documentElement.style.overflow = "hidden";
+    },
+    blur() {
+      console.log("456");
+      document.documentElement.style.overflow = "";
+    },
+    query() {
+      console.log("123");
+      //只读，无法改变
+      this.$store.commit("queryshowchange", true);
+    },
+  },
 };
 </script>
 <style scoped>
@@ -78,5 +110,28 @@ input {
   border-radius: 10px;
   text-align: center;
   line-height: 40px;
+}
+</style>
+<style>
+.el-date-editor.el-input {
+  width: 108px !important;
+}
+.el-input__inner {
+  border: unset;
+  padding-right: 0 !important;
+}
+.el-date-picker__header {
+  margin: 3px 12px !important;
+}
+.el-picker-panel__content {
+  margin: 0 15px !important;
+}
+.el-date-table td {
+  padding: 3px 2px;
+}
+.el-date-table td.disabled div {
+}
+.el-date-table th {
+  padding: 2px 5px;
 }
 </style>

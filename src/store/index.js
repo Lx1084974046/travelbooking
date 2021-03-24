@@ -12,7 +12,8 @@ export default new Vuex.Store({
     dialogbutton: '',
     returns: false,
     updateshow: false,
-    returnlogo: false
+    returnlogo: false,
+    queryShow:false
   },
   mutations: {
     titlechange(state, value) {
@@ -39,6 +40,9 @@ export default new Vuex.Store({
     returnlogochange(state, value) {
       state.returnlogo = value;
     },
+    queryshowchange(state,value){
+      state.queryShow = value
+    }
   },
   actions: {},
   modules: {},

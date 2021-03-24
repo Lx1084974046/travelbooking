@@ -48,11 +48,6 @@ export default [
             path: "person",
             name: "person",
             component: () => import("../userComponents/Model/person"),
-          },
-          {
-            path: "updateperson",
-            name: "updateperson",
-            component: () => import("../userComponents/Model/updateperson"),
           }
         ],
       },

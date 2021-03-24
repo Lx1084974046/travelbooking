@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapMutations } from "vuex";
 export default {
   name: "",
   data() {
@@ -17,9 +17,19 @@ export default {
   },
   watch: {},
   methods: {
+    ...mapMutations([
+      "updateshowchange",
+      "returnlogochange",
+      "queryshowchange",
+    ]),
     returnPerson() {
-      this.$store.commit("updateshowchange", false);
-      this.$store.commit("returnlogochange", false);
+      if (this.$route.name == "person") {
+        this.updateshowchange(false);
+        this.returnlogochange(false);
+      } else if (this.$route.name == "homeScreen") {
+        this.queryshowchange(false);
+        this.returnlogochange(false);
+      }
     },
   },
 };
