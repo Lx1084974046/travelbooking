@@ -13,7 +13,9 @@ export default new Vuex.Store({
     returns: false,
     updateshow: false,
     returnlogo: false,
-    queryShow:false
+    queryshow:false,
+    bookshow: false
+
   },
   mutations: {
     titlechange(state, value) {
@@ -41,7 +43,10 @@ export default new Vuex.Store({
       state.returnlogo = value;
     },
     queryshowchange(state,value){
-      state.queryShow = value
+      state.queryshow = value
+    },
+    bookshowchange(state,value){
+      state.bookshow = value
     }
   },
   actions: {},

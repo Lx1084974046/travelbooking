@@ -14,6 +14,7 @@
       <el-date-picker
         v-model="date"
         type="date"
+        value-format="yyyy-MM-dd"
         placeholder="选择日期"
         :editable="false"
         :clearable="false"
@@ -21,6 +22,7 @@
         :picker-options="pickerOptions"
         @focus="focus"
         @blur="blur"
+        @change="change"
       >
       </el-date-picker>
     </div>
@@ -45,17 +47,16 @@ export default {
   watch: {},
   methods: {
     focus() {
-      console.log("123");
       document.documentElement.style.overflow = "hidden";
     },
     blur() {
-      console.log("456");
       document.documentElement.style.overflow = "";
     },
     query() {
-      console.log("123");
-      //只读，无法改变
       this.$store.commit("queryshowchange", true);
+    },
+    change() {
+      console.log(this.date);
     },
   },
 };

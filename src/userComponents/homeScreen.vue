@@ -22,7 +22,7 @@
       </table>
     </div>
     <transition>
-      <querylist v-if="this.$store.state.queryShow" />
+      <querylist v-if="this.$store.state.queryshow" />
     </transition>
   </div>
 </template>

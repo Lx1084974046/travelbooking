@@ -21,14 +21,23 @@ export default {
       "updateshowchange",
       "returnlogochange",
       "queryshowchange",
+      "bookshowchange",
     ]),
     returnPerson() {
       if (this.$route.name == "person") {
         this.updateshowchange(false);
         this.returnlogochange(false);
-      } else if (this.$route.name == "homeScreen") {
+      } else if (
+        this.$route.name == "homeScreen" &&
+        !this.$store.state.bookshow
+      ) {
         this.queryshowchange(false);
         this.returnlogochange(false);
+      } else if (
+        this.$route.name == "homeScreen" &&
+        this.$store.state.bookshow
+      ) {
+        this.bookshowchange(false);
       }
     },
   },
