@@ -6,9 +6,9 @@
       <span>到达地</span>
     </div>
     <div class="mid">
-      <input type="text" placeholder="武汉" />
+      <input type="text" v-model="route1" placeholder="武汉" />
       <img src="~@/assets/userimg/dArrow.png" alt="" />
-      <input type="text" placeholder="北京" />
+      <input type="text" v-model="route2" placeholder="北京" />
     </div>
     <div class="date">
       <el-date-picker
@@ -31,11 +31,15 @@
 </template>
 
 <script>
+import { queryList } from "@/api/index.js";
 export default {
   name: "",
   data() {
     return {
       date: "",
+      date1: "",
+      route1: "",
+      route2: "",
       pickerOptions: {
         disabledDate(time) {
           return time.getTime() < Date.now() - 8.64e7; // - 8.64e7 表示可选择当天时间
@@ -53,7 +57,57 @@ export default {
       document.documentElement.style.overflow = "";
     },
     query() {
-      this.$store.commit("queryshowchange", true);
+      if (this.date == "") {
+        //未选择日期
+        this.date1 = new Date().toLocaleDateString();
+        console.log(this.date1);
+        if (this.route1 == "") {
+          //未选择地点
+          this.route1 = "武汉";
+        }
+        if (this.route2 == "") {
+          this.route2 = "北京";
+        }
+        let param1 = {
+          date: this.date1,
+          route1: this.route1,
+          route2: this.route2,
+        };
+        queryList(param1)
+          .then((res) => {
+            if (res.data != "false") {
+              localStorage.setExpire("querytoken", res.data);
+              this.$store.commit("queryshowchange", true);
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      } else {
+        console.log(this.date);
+        if (this.route1 == "") {
+          //未选择地点
+          this.route1 = "武汉";
+        }
+        if (this.route2 == "") {
+          this.route2 = "北京";
+        }
+        let param2 = {
+          date: this.date,
+          route1: this.route1,
+          route2: this.route2,
+        };
+        queryList(param2)
+          .then((res) => {
+            if (res.data != "false") {
+              localStorage.setExpire("querytoken", res.data);
+              this.$store.commit("queryshowchange", true);
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
     },
     change() {
       console.log(this.date);

@@ -38,6 +38,9 @@ export default {
         localStorage.removeItem("usertoken");
         this.$router.push({ path: "/userHome/me/nologin" });
       }
+      if (this.dialogbutton == "返回" && this.$route.name == "homeScreen") {
+        store.commit("queryshowchange", false);
+      }
     },
     cancel() {
       store.commit("dialogshowchange", false);

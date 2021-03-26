@@ -14,3 +14,7 @@ export const userLogin = params =>
 //用户信息修改
 export const userUpdate = params =>
     post('/userUpdate',params)
+
+//航班查询
+export const queryList = params =>
+    post('/queryList',params)

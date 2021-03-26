@@ -7,151 +7,34 @@
         <span>后一天&gt;</span>
       </div>
       <div class="lists">
-        <div class="ignorelist" @click="book">
+        <div
+          class="ignorelist"
+          @click="book"
+          v-for="(item, index) in list"
+          :key="index"
+        >
           <div class="time-info">
-            <span>10:00</span>
+            <span>{{ item.time1 }}</span>
             <i></i>
-            <span>12:00</span>
+            <span>{{ item.time2 }}</span>
           </div>
           <div class="locale-info">
-            <span>武汉</span>
-            <span>北京</span>
+            <span>{{ item.route1 }}</span>
+            <span>{{ item.route2 }}</span>
           </div>
           <div class="bottom-info">
-            <img src="@/assets/airline/3U.png" alt="" />
-            <span>3U8626</span>
-            <span>中型机</span>
-            <span>余票：120</span>
+            <img
+              :src="require('../../assets/airline/' + item.airline + '.png')"
+              alt=""
+            />
+            <!-- vue中图片在本地，路径是动态请求过来的，拼接图片路径必须要用require -->
+            <span>{{ item.flightNum }}</span>
+            <span>{{ item.type }}型机</span>
+            <span>余票：{{ item.poll }}</span>
           </div>
           <div class="price">
-            <span>¥599</span>
+            <span>{{ item.price }}</span>
             <span>经济舱</span>
-          </div>
-        </div>
-        <div class="ignorelist">
-          <div class="time-info">
-            <span>10:00</span>
-            <i></i>
-            <span>12:00</span>
-          </div>
-          <div class="locale-info">
-            <span>武汉</span>
-            <span>北京</span>
-          </div>
-          <div class="bottom-info">
-            <img src="@/assets/airline/3U.png" alt="" />
-            <span>3U8626</span>
-            <span>中型机</span>
-            <span>余票：120</span>
-          </div>
-          <div class="price">
-            <span>¥599</span>
-            <span>经济仓</span>
-          </div>
-        </div>
-        <div class="ignorelist">
-          <div class="time-info">
-            <span>10:00</span>
-            <i></i>
-            <span>12:00</span>
-          </div>
-          <div class="locale-info">
-            <span>武汉</span>
-            <span>北京</span>
-          </div>
-          <div class="bottom-info">
-            <img src="@/assets/airline/3U.png" alt="" />
-            <span>3U8626</span>
-            <span>中型机</span>
-            <span>余票：120</span>
-          </div>
-          <div class="price">
-            <span>¥599</span>
-            <span>经济仓</span>
-          </div>
-        </div>
-        <div class="ignorelist">
-          <div class="time-info">
-            <span>10:00</span>
-            <i></i>
-            <span>12:00</span>
-          </div>
-          <div class="locale-info">
-            <span>武汉</span>
-            <span>北京</span>
-          </div>
-          <div class="bottom-info">
-            <img src="@/assets/airline/3U.png" alt="" />
-            <span>3U8626</span>
-            <span>中型机</span>
-            <span>余票：120</span>
-          </div>
-          <div class="price">
-            <span>¥599</span>
-            <span>经济仓</span>
-          </div>
-        </div>
-        <div class="ignorelist">
-          <div class="time-info">
-            <span>10:00</span>
-            <i></i>
-            <span>12:00</span>
-          </div>
-          <div class="locale-info">
-            <span>武汉</span>
-            <span>北京</span>
-          </div>
-          <div class="bottom-info">
-            <img src="@/assets/airline/3U.png" alt="" />
-            <span>3U8626</span>
-            <span>中型机</span>
-            <span>余票：120</span>
-          </div>
-          <div class="price">
-            <span>¥599</span>
-            <span>经济仓</span>
-          </div>
-        </div>
-        <div class="ignorelist">
-          <div class="time-info">
-            <span>10:00</span>
-            <i></i>
-            <span>12:00</span>
-          </div>
-          <div class="locale-info">
-            <span>武汉</span>
-            <span>北京</span>
-          </div>
-          <div class="bottom-info">
-            <img src="@/assets/airline/3U.png" alt="" />
-            <span>3U8626</span>
-            <span>中型机</span>
-            <span>余票：120</span>
-          </div>
-          <div class="price">
-            <span>¥599</span>
-            <span>经济仓</span>
-          </div>
-        </div>
-        <div class="ignorelist">
-          <div class="time-info">
-            <span>10:00</span>
-            <i></i>
-            <span>12:00</span>
-          </div>
-          <div class="locale-info">
-            <span>武汉</span>
-            <span>北京</span>
-          </div>
-          <div class="bottom-info">
-            <img src="@/assets/airline/3U.png" alt="" />
-            <span>3U8626</span>
-            <span>中型机</span>
-            <span>余票：120</span>
-          </div>
-          <div class="price">
-            <span>¥599</span>
-            <span>经济仓</span>
           </div>
         </div>
         <div class="bottom"></div>
@@ -231,23 +114,41 @@
 </template>
 
 <script>
+import { mapMutations } from "vuex";
 export default {
   name: "",
   data() {
     return {
       bookShow: false,
       cabin: "",
+      list: null,
     };
   },
   computed: {},
   watch: {},
   methods: {
+    ...mapMutations([
+      "dialogshowchange",
+      "dialogtitlechange",
+      "dialogcontentchange",
+      "dialogbuttonchange",
+    ]),
     book() {
       this.$store.commit("bookshowchange", true);
     },
   },
   mounted() {
     this.$store.commit("returnlogochange", true);
+    if (localStorage.getExpire("querytoken") == false) {
+      this.dialogshowchange(true);
+      this.dialogtitlechange("暂无数据");
+      this.dialogcontentchange("航班暂无排班");
+      this.dialogbuttonchange("返回");
+    } else {
+      //渲染list
+      console.log(localStorage.getExpire("querytoken"));
+      this.list = localStorage.getExpire("querytoken");
+    }
   },
   beforeDestroy() {
     this.$store.commit("returnlogochange", false);
