@@ -4,9 +4,13 @@
       <div class="tit">{{ this.dialogtitle }}</div>
       <span>{{ this.dialogcontent }}</span>
       <div class="btn">
-        <el-button @click="closeDialog" type="primary">{{
-          this.dialogbutton
-        }}</el-button>
+        <el-button
+          @click="closeDialog"
+          type="primary"
+          v-if="this.dialogbutton"
+          >{{ this.dialogbutton }}</el-button
+        >
+        <!-- 一个操作按钮，一个单纯关闭弹窗按钮 -->
         <el-button @click="cancel" type="success" v-if="this.returns"
           >返回</el-button
         >
@@ -24,7 +28,13 @@ export default {
     return {};
   },
   computed: {
-    ...mapState(["dialogtitle", "dialogcontent", "dialogbutton", "returns"]),
+    ...mapState([
+      "dialogtitle",
+      "dialogcontent",
+      "dialogbutton",
+      "returns",
+      "bookshow",
+    ]),
   },
   watch: {},
   methods: {
@@ -38,8 +48,11 @@ export default {
         localStorage.removeItem("usertoken");
         this.$router.push({ path: "/userHome/me/nologin" });
       }
-      if (this.dialogbutton == "返回" && this.$route.name == "homeScreen") {
+      if (!this.bookshow && this.$route.name == "homeScreen") {
         store.commit("queryshowchange", false);
+      }
+      if (this.bookshow && this.$route.name == "homeScreen") {
+        console.log("success");
       }
     },
     cancel() {

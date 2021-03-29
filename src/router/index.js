@@ -20,6 +20,12 @@ router.beforeEach((to, from, next) => {
     store.commit("titlechange", "个人中心");
   }
   next();
+  if(from.path.search("home") != -1){
+    store.commit("bookshowchange", false);
+  }else if(from.path.search("me") != -1){
+    store.commit("updateshowchange", false);
+  }
+  next();
   // if(to.name == 'nologin'){    //路由匹配
   //   store.commit('no_loginchange',true)
   //   if(store.state.lo_gin){

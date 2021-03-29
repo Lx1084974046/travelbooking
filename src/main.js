@@ -3,6 +3,7 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import axios from 'axios';
+import moment from "moment";
 import ElementUI from "element-ui";
 import "element-ui/lib/theme-chalk/index.css";
 
@@ -32,6 +33,10 @@ Storage.prototype.getExpire= key =>{
   }
   return val.data;
 }
+// 定义时间格式全局过滤器   YYYY-MM-DD HH:mm:ss
+Vue.filter("dateFormat", function(daraStr, pattern = "MM月DD日") {
+  return moment(daraStr).format(pattern);
+});
 new Vue({
   router,
   store,

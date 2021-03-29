@@ -15,7 +15,6 @@ export default new Vuex.Store({
     returnlogo: false,
     queryshow:false,
     bookshow: false
-
   },
   mutations: {
     titlechange(state, value) {

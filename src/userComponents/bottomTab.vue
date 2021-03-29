@@ -19,15 +19,12 @@ export default {
   methods: {
     ...mapMutations(["titlechange"]),
     goHome() {
-      store.commit("updateshowchange", false);
       this.$router.push({ path: "/userHome/home" });
     },
     goDynamic() {
-      store.commit("updateshowchange", false);
       this.$router.push({ path: "/userHome/dynamic" });
     },
     goTravel() {
-      store.commit("updateshowchange", false);
       this.$router.push({ path: "/userHome/travel" });
     },
     goMe() {

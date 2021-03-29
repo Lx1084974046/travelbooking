@@ -9,7 +9,7 @@
       <div class="lists">
         <div
           class="ignorelist"
-          @click="book"
+          @click="book(index)"
           v-for="(item, index) in list"
           :key="index"
         >
@@ -33,7 +33,7 @@
             <span>余票：{{ item.poll }}</span>
           </div>
           <div class="price">
-            <span>{{ item.price }}</span>
+            <span>¥{{ item.price }}</span>
             <span>经济舱</span>
           </div>
         </div>
@@ -44,19 +44,24 @@
       <div class="book" v-if="this.$store.state.bookshow">
         <div class="book-list">
           <div class="top-info">
-            <img src="@/assets/airline/3U.png" alt="" />
-            <span>川航3U8626</span>
-            <span>空客A321(中)</span>
-            <span>12月30日</span>
+            <img
+              :src="
+                require('../../assets/airline/' + this.books.airline + '.png')
+              "
+              alt=""
+            />
+            <span>{{ this.books.flightNum }}</span>
+            <span>{{ this.books.plane }}</span>
+            <span>{{ this.books.date | dateFormat }}</span>
           </div>
           <div class="time-info">
-            <span>10:00</span>
+            <span>{{ this.books.time1 }}</span>
             <i></i>
-            <span>12:00</span>
+            <span>{{ this.books.time2 }}</span>
           </div>
           <div class="locale-info">
-            <span>天河T2</span>
-            <span>首都T2</span>
+            <span>{{ this.books.airport1 }}</span>
+            <span>{{ this.books.airport2 }}</span>
           </div>
 
           <div class="service-info">
@@ -81,7 +86,7 @@
           <div class="cabin">
             <div class="cabin-top">
               <span>经济舱</span>
-              <span class="cabin-price">¥599</span>
+              <span class="cabin-price">¥{{ this.books.price }}</span>
               <el-radio v-model="cabin" label="1"><br /></el-radio>
             </div>
             <div class="cabin-bottom">
@@ -96,7 +101,7 @@
           <div class="cabin cabin2">
             <div class="cabin-top">
               <span>公务舱</span>
-              <span class="cabin-price">¥1299</span>
+              <span class="cabin-price">¥{{ this.books.price + 1100 }}</span>
               <el-radio v-model="cabin" label="2"><br /></el-radio>
             </div>
             <div class="cabin-bottom">
@@ -108,6 +113,9 @@
             </div>
           </div>
         </div>
+        <el-button class="order" type="primary" round @click="order"
+          >订&nbsp;票</el-button
+        >
       </div>
     </transition>
   </div>
@@ -120,8 +128,19 @@ export default {
   data() {
     return {
       bookShow: false,
-      cabin: "",
+      cabin: "1",
       list: null,
+      books: {
+        flightNum: "",
+        plane: "",
+        date: "",
+        time1: "",
+        time2: "",
+        price: "",
+        airline: "",
+        airport1: "",
+        airport2: "",
+      },
     };
   },
   computed: {},
@@ -132,8 +151,68 @@ export default {
       "dialogtitlechange",
       "dialogcontentchange",
       "dialogbuttonchange",
+      "dialogreturnsbuttonchange",
     ]),
-    book() {
+    order() {
+      if (localStorage.getExpire("logintoken")) {
+        this.dialogshowchange(true);
+        this.dialogtitlechange("订票");
+        if (this.cabin == "1") {
+          this.dialogcontentchange("您已选择经济舱，确认订票？");
+        } else {
+          this.dialogcontentchange("您已选择公务舱，确认订票？");
+        }
+        this.dialogbuttonchange("确认");
+      } else {
+        this.dialogshowchange(true);
+        this.dialogtitlechange("订票失败");
+        this.dialogcontentchange("请先登录再订票");
+        this.dialogbuttonchange("登录");
+      }
+      console.log(this.cabin);
+    },
+    book(index) {
+      console.log(index);
+      this.books.flightNum = this.list[index].flightNum;
+      switch (this.books.flightNum.slice(0, 2)) {
+        case "3U":
+          this.books.flightNum = "川航" + this.books.flightNum;
+          break;
+        case "CA":
+          this.books.flightNum = "国航" + this.books.flightNum;
+          break;
+        case "HU":
+          this.books.flightNum = "海航" + this.books.flightNum;
+          break;
+        case "CZ":
+          this.books.flightNum = "南航" + this.books.flightNum;
+          break;
+        case "MF":
+          this.books.flightNum = "厦航" + this.books.flightNum;
+          break;
+        case "MU":
+          this.books.flightNum = "东航" + this.books.flightNum;
+          break;
+      }
+      this.books.plane = this.list[index].plane;
+      switch (this.books.plane.slice(0, 1)) {
+        case "A":
+          this.books.plane =
+            "空客" + this.books.plane + "(" + this.list[index].type + ")";
+          break;
+        case "B":
+          this.books.plane =
+            "波音" + this.books.plane + "(" + this.list[index].type + ")";
+          break;
+      }
+      console.log(this.list[index].date);
+      this.books.date = this.list[index].date;
+      this.books.time1 = this.list[index].time1;
+      this.books.time2 = this.list[index].time2;
+      this.books.price = this.list[index].price;
+      this.books.airline = this.list[index].airline;
+      this.books.airport1 = this.list[index].airport1;
+      this.books.airport2 = this.list[index].airport2;
       this.$store.commit("bookshowchange", true);
     },
   },
@@ -427,10 +506,20 @@ export default {
     }
   }
 }
+
+.order {
+  margin-top: 6px;
+  width: 60%;
+  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
+  margin-left: 50%;
+  transform: translateX(-50%);
+}
 </style>
 <style>
 .el-radio__inner {
   width: 20px;
   height: 20px;
+}
+.el-button {
 }
 </style>
