@@ -14,7 +14,8 @@ export default new Vuex.Store({
     updateshow: false,
     returnlogo: false,
     queryshow:false,
-    bookshow: false
+    bookshow: false,
+    flightnum: ''
   },
   mutations: {
     titlechange(state, value) {
@@ -46,7 +47,10 @@ export default new Vuex.Store({
     },
     bookshowchange(state,value){
       state.bookshow = value
-    }
+    },
+    flightnumchange(state, value) {
+      state.flightnum = value;
+    },
   },
   actions: {},
   modules: {},

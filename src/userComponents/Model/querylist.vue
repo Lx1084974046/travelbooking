@@ -152,14 +152,17 @@ export default {
       "dialogcontentchange",
       "dialogbuttonchange",
       "dialogreturnsbuttonchange",
+      "flightnumchange",
     ]),
     order() {
       if (localStorage.getExpire("logintoken")) {
         this.dialogshowchange(true);
         this.dialogtitlechange("订票");
         if (this.cabin == "1") {
+          this.dialogreturnsbuttonchange(true);
           this.dialogcontentchange("您已选择经济舱，确认订票？");
         } else {
+          this.dialogreturnsbuttonchange(true);
           this.dialogcontentchange("您已选择公务舱，确认订票？");
         }
         this.dialogbuttonchange("确认");
@@ -172,7 +175,8 @@ export default {
       console.log(this.cabin);
     },
     book(index) {
-      console.log(index);
+      //记录当前航班号传递给确认订票时用
+      this.flightnumchange(this.list[index].flightNum);
       this.books.flightNum = this.list[index].flightNum;
       switch (this.books.flightNum.slice(0, 2)) {
         case "3U":

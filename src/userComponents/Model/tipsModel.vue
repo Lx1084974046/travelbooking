@@ -20,8 +20,9 @@
 </template>
 
 <script>
+import { bookcheck, book } from "@/api/index.js";
 import store from "@/store";
-import { mapState } from "vuex";
+import { mapState, mapMutations } from "vuex";
 export default {
   name: "",
   data() {
@@ -34,10 +35,20 @@ export default {
       "dialogbutton",
       "returns",
       "bookshow",
+      "flightnum",
     ]),
   },
   watch: {},
   methods: {
+    ...mapMutations([
+      "dialogshowchange",
+      "dialogtitlechange",
+      "dialogcontentchange",
+      "dialogbuttonchange",
+      "dialogreturnsbuttonchange",
+      "flightnumchange",
+      "bookshowchange",
+    ]),
     closeDialog() {
       store.commit("dialogshowchange", false);
       if (this.dialogbutton == "登录") {
@@ -53,12 +64,52 @@ export default {
       }
       if (this.bookshow && this.$route.name == "homeScreen") {
         console.log("success");
+        let param1 = {
+          account: localStorage.getExpire("usertoken").user_Account,
+          flightNum: this.flightnum,
+        };
+        bookcheck(param1)
+          .then((res) => {
+            if (res.data == false) {
+              book(param1)
+                .then((res) => {
+                  if (res.data) {
+                    this.dialogshowchange(true);
+                    this.dialogtitlechange("订票成功");
+                    this.dialogcontentchange("祝您旅途愉快！");
+                    this.dialogreturnsbuttonchange(true);
+                  } else {
+                    this.dialogshowchange(true);
+                    this.dialogtitlechange("订票失败");
+                    this.dialogcontentchange("请重新订票！");
+                    this.dialogreturnsbuttonchange(true);
+                  }
+                })
+                .catch((error) => {
+                  console.log(error);
+                });
+            } else {
+              this.dialogshowchange(true);
+              this.dialogtitlechange("订票失败");
+              this.dialogcontentchange("您已经订购过该航班");
+              this.dialogreturnsbuttonchange(true);
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       }
     },
     cancel() {
-      store.commit("dialogshowchange", false);
-      store.commit("dialogreturnsbuttonchange", false);
+      this.dialogshowchange(false);
+      if (this.bookshow && this.$route.name == "homeScreen") {
+        this.bookshowchange(false);
+      }
     },
+  },
+  beforeDestroy() {
+    this.dialogbuttonchange(false);
+    this.dialogreturnsbuttonchange(false);
   },
 };
 </script>
@@ -86,7 +137,7 @@ export default {
   margin-bottom: 20px;
 }
 .el-button {
-  margin-top: 10px;
+  margin-top: 20px;
 }
 span {
   text-align: center;

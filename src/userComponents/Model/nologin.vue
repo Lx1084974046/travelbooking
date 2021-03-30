@@ -27,9 +27,9 @@ export default {
 .app-nologin {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   height: 100%;
+  margin-top: 50px;
 }
 i {
   width: 300px;
@@ -37,6 +37,7 @@ i {
   display: block;
   background: url("~@/assets/userimg/no-data.png");
   background-size: contain;
+  margin-top: 60px;
 }
 .btn {
   width: 100px;

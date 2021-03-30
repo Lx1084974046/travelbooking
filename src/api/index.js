@@ -18,3 +18,11 @@ export const userUpdate = params =>
 //航班查询
 export const queryList = params =>
     post('/queryList',params)
+
+//用户订单信息查询
+export const bookcheck = params =>
+    get('/bookcheck',params)
+
+//航班查询
+export const book = params =>
+    post('/book',params)
