@@ -19,10 +19,14 @@ export const userUpdate = params =>
 export const queryList = params =>
     post('/queryList',params)
 
-//用户订单信息查询
+//用户订单信息查询(登录时获取)
 export const bookcheck = params =>
     get('/bookcheck',params)
 
-//航班查询
+//用户订票
 export const book = params =>
     post('/book',params)
+
+//用户航班信息查询
+export const queryUserList = params =>
+    post('/queryUserList',params)

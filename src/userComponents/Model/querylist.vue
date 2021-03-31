@@ -153,11 +153,14 @@ export default {
       "dialogbuttonchange",
       "dialogreturnsbuttonchange",
       "flightnumchange",
+      "cabinnumchange",
     ]),
     order() {
       if (localStorage.getExpire("logintoken")) {
         this.dialogshowchange(true);
         this.dialogtitlechange("订票");
+        //记录当前舱类传递给显示时用
+        this.cabinnumchange(this.cabin);
         if (this.cabin == "1") {
           this.dialogreturnsbuttonchange(true);
           this.dialogcontentchange("您已选择经济舱，确认订票？");
@@ -222,6 +225,7 @@ export default {
   },
   mounted() {
     this.$store.commit("returnlogochange", true);
+    //localStorage无数据时为false
     if (localStorage.getExpire("querytoken") == false) {
       this.dialogshowchange(true);
       this.dialogtitlechange("暂无数据");
@@ -317,7 +321,7 @@ export default {
   align-items: center;
   margin-top: 8px;
   margin-left: 20px;
-  margin-bottom: 10px;
+  margin-bottom: 6px;
 }
 .bottom-info span {
   margin-left: 12px;
@@ -523,7 +527,5 @@ export default {
 .el-radio__inner {
   width: 20px;
   height: 20px;
-}
-.el-button {
 }
 </style>

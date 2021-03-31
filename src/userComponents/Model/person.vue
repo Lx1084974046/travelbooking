@@ -71,8 +71,6 @@ export default {
           console.log(111111111);
           userFind({ account: localStorage.getExpire("logintoken") })
             .then((res) => {
-              console.log(1111);
-              console.log(res.data);
               //将APi返回的用户信息存储到本地，减少接口请求次数
               localStorage.setExpire("usertoken", res.data[0]);
               this.ID = res.data[0].user_Account;

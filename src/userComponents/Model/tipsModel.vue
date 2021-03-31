@@ -36,6 +36,7 @@ export default {
       "returns",
       "bookshow",
       "flightnum",
+      "cabinnum",
     ]),
   },
   watch: {},
@@ -48,6 +49,7 @@ export default {
       "dialogreturnsbuttonchange",
       "flightnumchange",
       "bookshowchange",
+      "updateorderlistchange",
     ]),
     closeDialog() {
       store.commit("dialogshowchange", false);
@@ -57,47 +59,71 @@ export default {
       if (this.dialogbutton == "确认" && this.$route.name == "person") {
         localStorage.removeItem("logintoken");
         localStorage.removeItem("usertoken");
+        localStorage.removeItem("userordertoken");
+        localStorage.removeItem("userorderlisttoken");
         this.$router.push({ path: "/userHome/me/nologin" });
       }
       if (!this.bookshow && this.$route.name == "homeScreen") {
         store.commit("queryshowchange", false);
       }
       if (this.bookshow && this.$route.name == "homeScreen") {
-        console.log("success");
         let param1 = {
           account: localStorage.getExpire("usertoken").user_Account,
           flightNum: this.flightnum,
+          cabin: this.cabinnum,
         };
-        bookcheck(param1)
-          .then((res) => {
-            if (res.data == false) {
-              book(param1)
-                .then((res) => {
-                  if (res.data) {
-                    this.dialogshowchange(true);
-                    this.dialogtitlechange("订票成功");
-                    this.dialogcontentchange("祝您旅途愉快！");
-                    this.dialogreturnsbuttonchange(true);
-                  } else {
-                    this.dialogshowchange(true);
-                    this.dialogtitlechange("订票失败");
-                    this.dialogcontentchange("请重新订票！");
-                    this.dialogreturnsbuttonchange(true);
-                  }
-                })
-                .catch((error) => {
-                  console.log(error);
-                });
-            } else {
-              this.dialogshowchange(true);
-              this.dialogtitlechange("订票失败");
-              this.dialogcontentchange("您已经订购过该航班");
-              this.dialogreturnsbuttonchange(true);
-            }
-          })
-          .catch((error) => {
-            console.log(error);
-          });
+        //验证用户是否已经购买该航班的票，从userordertoken获取信息
+        let flag = true;
+        for (
+          var i = 0;
+          i < localStorage.getExpire("userordertoken").length;
+          i++
+        ) {
+          if (
+            this.flightnum ==
+            localStorage.getExpire("userordertoken")[i].flightNum
+          ) {
+            console.log(flag);
+            flag = false;
+            console.log(flag);
+          }
+        }
+        if (flag == true) {
+          book(param1)
+            .then((res) => {
+              if (res.data) {
+                this.dialogshowchange(true);
+                this.dialogtitlechange("订票成功");
+                this.dialogcontentchange("祝您旅途愉快！");
+                this.dialogreturnsbuttonchange(true);
+                //订票成功更新用户订单信息
+                bookcheck({ account: param1.account })
+                  .then((res) => {
+                    localStorage.setExpire("userordertoken", res.data);
+                    console.log("gengxin");
+                    //用户订单更新，订单详细信息也应该更新
+                    this.updateorderlistchange(true);
+                  })
+                  .catch((error) => {
+                    console.log(error);
+                  });
+              } else {
+                this.dialogshowchange(true);
+                this.dialogtitlechange("订票失败");
+                this.dialogcontentchange("请重新订票！");
+                this.dialogreturnsbuttonchange(true);
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        } else {
+          this.dialogbuttonchange("");
+          this.dialogshowchange(true);
+          this.dialogtitlechange("订票失败");
+          this.dialogcontentchange("您已经订购过该航班");
+          this.dialogreturnsbuttonchange(true);
+        }
       }
     },
     cancel() {
@@ -108,7 +134,7 @@ export default {
     },
   },
   beforeDestroy() {
-    this.dialogbuttonchange(false);
+    this.dialogbuttonchange("");
     this.dialogreturnsbuttonchange(false);
   },
 };
