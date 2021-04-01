@@ -1,4 +1,4 @@
-import { get,post } from '@/utils/request.js'
+import { get,post,deletes } from '@/utils/request.js'
 //用户注册
 export const userRegister = params =>
     post('/userRegister',params)
@@ -30,3 +30,7 @@ export const book = params =>
 //用户航班信息查询
 export const queryUserList = params =>
     post('/queryUserList',params)
+
+//用户取消航班
+export const refund = params =>
+    deletes('/refund',params)

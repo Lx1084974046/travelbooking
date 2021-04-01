@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import { bookcheck, book } from "@/api/index.js";
+import { bookcheck, book, refund } from "@/api/index.js";
 import store from "@/store";
 import { mapState, mapMutations } from "vuex";
 export default {
@@ -47,9 +47,7 @@ export default {
       "dialogcontentchange",
       "dialogbuttonchange",
       "dialogreturnsbuttonchange",
-      "flightnumchange",
       "bookshowchange",
-      "updateorderlistchange",
     ]),
     closeDialog() {
       store.commit("dialogshowchange", false);
@@ -59,13 +57,13 @@ export default {
       if (this.dialogbutton == "确认" && this.$route.name == "person") {
         localStorage.removeItem("logintoken");
         localStorage.removeItem("usertoken");
-        localStorage.removeItem("userordertoken");
         localStorage.removeItem("userorderlisttoken");
         this.$router.push({ path: "/userHome/me/nologin" });
       }
       if (!this.bookshow && this.$route.name == "homeScreen") {
         store.commit("queryshowchange", false);
       }
+      //订票
       if (this.bookshow && this.$route.name == "homeScreen") {
         let param1 = {
           account: localStorage.getExpire("usertoken").user_Account,
@@ -76,12 +74,12 @@ export default {
         let flag = true;
         for (
           var i = 0;
-          i < localStorage.getExpire("userordertoken").length;
+          i < localStorage.getExpire("userorderlisttoken").length;
           i++
         ) {
           if (
             this.flightnum ==
-            localStorage.getExpire("userordertoken")[i].flightNum
+            localStorage.getExpire("userorderlisttoken")[i].flightNum.slice(4)
           ) {
             console.log(flag);
             flag = false;
@@ -97,16 +95,8 @@ export default {
                 this.dialogcontentchange("祝您旅途愉快！");
                 this.dialogreturnsbuttonchange(true);
                 //订票成功更新用户订单信息
-                bookcheck({ account: param1.account })
-                  .then((res) => {
-                    localStorage.setExpire("userordertoken", res.data);
-                    console.log("gengxin");
-                    //用户订单更新，订单详细信息也应该更新
-                    this.updateorderlistchange(true);
-                  })
-                  .catch((error) => {
-                    console.log(error);
-                  });
+                localStorage.removeItem("userorderlisttoken");
+                this.$router.push({ path: "/userHome/travel" });
               } else {
                 this.dialogshowchange(true);
                 this.dialogtitlechange("订票失败");
@@ -124,6 +114,42 @@ export default {
           this.dialogcontentchange("您已经订购过该航班");
           this.dialogreturnsbuttonchange(true);
         }
+      }
+      //退票
+      if (this.$route.name == "travel") {
+        console.log("147");
+        let param2 = {
+          account: localStorage.getExpire("usertoken").user_Account,
+          flightNum: this.flightnum,
+        };
+        refund(param2)
+          .then((res) => {
+            console.log(res);
+            if (res.data) {
+              //这里似乎无法用js数组方法改变localStorageSession的信息
+              // console.log(param2.flightNum);
+              // var temp = localStorage
+              //   .getExpire("userordertoken")
+              //   .findIndex((item, index) => {
+              //     //蜜汁问题，循环到满足条件的，还是返回-1，于是利用该方法遍历，设置自行判断和返回
+              //     if (item.flightNum == param2.flightNum) {
+              //       return index;
+              //     }
+              //   });
+              // console.log(temp);
+              // localStorage.getExpire("userordertoken").splice(temp, 1);
+              //用户航班发生变化更新用户订单信息
+              localStorage.removeItem("userorderlisttoken");
+              console.log("nonono");
+              this.$router.push({ path: "/userHome/home" });
+              this.$router.push({ path: "/userHome/travel" });
+            } else {
+              console.log(res);
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       }
     },
     cancel() {

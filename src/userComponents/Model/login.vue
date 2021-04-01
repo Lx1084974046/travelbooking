@@ -91,16 +91,6 @@ export default {
                   "logintoken",
                   JSON.parse(res.config.data).account
                 );
-                //登录成功获取用户订单信息
-                bookcheck({ account: this.form.account })
-                  .then((res) => {
-                    console.log(res.data);
-                    //将APi返回的用户订单信息存储到本地，减少接口请求次数
-                    localStorage.setExpire("userordertoken", res.data);
-                  })
-                  .catch((error) => {
-                    console.log(error);
-                  });
                 this.$router.push({ path: "/userHome/me/person" });
               } else {
                 this.dialogtitlechange("登录失败");

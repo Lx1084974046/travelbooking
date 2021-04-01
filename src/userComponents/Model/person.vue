@@ -68,7 +68,7 @@ export default {
         //登录后获取用户个人信息
         //首次登录请求登录接口
         if (localStorage.getExpire("usertoken") == null) {
-          console.log(111111111);
+          console.log("不存在");
           userFind({ account: localStorage.getExpire("logintoken") })
             .then((res) => {
               //将APi返回的用户信息存储到本地，减少接口请求次数
@@ -98,7 +98,7 @@ export default {
         } else {
           //根据本地存储的用户信息渲染页面
           var userInfo = localStorage.getExpire("usertoken");
-          console.log(userInfo);
+          console.log("存在");
           this.ID = userInfo.user_Account;
           if (userInfo.user_sex == 0) {
             this.sex = "男";

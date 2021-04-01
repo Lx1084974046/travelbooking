@@ -70,3 +70,18 @@ instance.interceptors.request.use(
             })
           })
       }
+
+      //统一封装delete请求
+  export const deletes = (url,data) => {
+    return new Promise((resolve,reject) => {
+        instance({
+            method:"delete",
+            url,
+            data
+        }).then(response => {
+            resolve(response)
+        }).catch(error => {
+            reject(error)
+        })
+      })
+  }

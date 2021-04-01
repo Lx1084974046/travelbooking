@@ -212,7 +212,6 @@ export default {
             "波音" + this.books.plane + "(" + this.list[index].type + ")";
           break;
       }
-      console.log(this.list[index].date);
       this.books.date = this.list[index].date;
       this.books.time1 = this.list[index].time1;
       this.books.time2 = this.list[index].time2;

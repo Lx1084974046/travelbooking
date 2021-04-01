@@ -16,7 +16,6 @@ export default new Vuex.Store({
     queryshow:false,
     bookshow: false,
     flightnum: '',//传递航班号
-    updateorderlist: false,
     cabinnum: ''//传递舱号
   },
   mutations: {
@@ -52,9 +51,6 @@ export default new Vuex.Store({
     },
     flightnumchange(state, value) {
       state.flightnum = value;
-    },
-    updateorderlistchange(state,value){
-      state.updateorderlist =value
     },
     cabinnumchange(state, value) {
       state.cabinnum = value;
