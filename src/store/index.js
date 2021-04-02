@@ -16,7 +16,8 @@ export default new Vuex.Store({
     queryshow:false,
     bookshow: false,
     flightnum: '',//传递航班号
-    cabinnum: ''//传递舱号
+    cabinnum: '',//传递舱号
+    reload:1,//传递退票后同步更新信息
   },
   mutations: {
     titlechange(state, value) {
@@ -54,6 +55,9 @@ export default new Vuex.Store({
     },
     cabinnumchange(state, value) {
       state.cabinnum = value;
+    },
+    reloadchange(state,value){
+      state.reload = state.reload + 1
     }
   },
   actions: {},

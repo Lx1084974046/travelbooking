@@ -2,11 +2,11 @@
   <div class="query-app">
     <div class="query-list">
       <div class="list-nav">
-        <span>&lt;前一天</span>
-        <span>date</span>
-        <span>后一天&gt;</span>
+        <span @click="right">&lt;前一天</span>
+        <span>{{ this.ondate | dateFormat }}</span>
+        <span @click="left">后一天&gt;</span>
       </div>
-      <div class="lists">
+      <div class="lists" :key="key">
         <div
           class="ignorelist"
           @click="book(index)"
@@ -122,14 +122,22 @@
 </template>
 
 <script>
+import Vue from "vue";
+import { queryList } from "@/api/index.js";
 import { mapMutations } from "vuex";
 export default {
   name: "",
   data() {
     return {
+      key: 0, //刷新list
+      tipsdate: null,
+      currentdate: null,
       bookShow: false,
       cabin: "1",
       list: null,
+      ondate: null, //一直保持时间戳格式
+      route1: "",
+      route2: "",
       books: {
         flightNum: "",
         plane: "",
@@ -154,7 +162,60 @@ export default {
       "dialogreturnsbuttonchange",
       "flightnumchange",
       "cabinnumchange",
+      "queryshowchange",
     ]),
+    handleUpdateClick() {
+      // built-in
+      this.key += 1;
+      console.log(this.key);
+      console.log("接收到变化");
+    },
+    right() {
+      //Date.parse()将日期字符串转时间戳 若字符无法识别返回NaN
+      if (this.ondate == Date.parse(this.currentdate)) {
+        this.dialogshowchange(true);
+        this.dialogtitlechange("暂无数据");
+        this.dialogcontentchange("无法查看历史航班");
+        this.dialogreturnsbuttonchange(true);
+      } else {
+        let temp = Vue.filter("dateFormat");
+        this.ondate = new Date(this.ondate).setDate(
+          new Date(this.ondate).getDate() - 1
+        );
+      }
+    },
+    left() {
+      //获取全局过滤器
+      // let temp = Vue.filter("dateFormat");
+      //temp(~)
+      //setDate设置时间为所在月份的某一天 getDate获取时间所在月份的第几天
+      //过滤器moment插件是以国际时间为准,处理北京时间生成的时间戳是以北京时间08:00，因为北京时间比国际时间快8h
+      this.ondate = new Date(this.ondate).setDate(
+        new Date(this.ondate).getDate() + 1
+      );
+      let param2 = {
+        date: new Date(this.ondate).toLocaleDateString(),
+        route1: this.route1,
+        route2: this.route2,
+      };
+      console.log("qaaa");
+      queryList(param2)
+        .then((res) => {
+          if (res.data != "false") {
+            console.log(res.data);
+            localStorage.setExpire("querytoken", res.data);
+            this.handleUpdateClick();
+          } else {
+            this.dialogshowchange(true);
+            this.dialogtitlechange("暂无数据");
+            this.dialogcontentchange("航班暂无排班");
+            this.dialogreturnsbuttonchange(true);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
     order() {
       if (localStorage.getExpire("logintoken")) {
         this.dialogshowchange(true);
@@ -223,18 +284,19 @@ export default {
     },
   },
   mounted() {
+    this.currentdate = new Date().toLocaleDateString();
     this.$store.commit("returnlogochange", true);
     //localStorage无数据时为false
-    if (localStorage.getExpire("querytoken") == false) {
-      this.dialogshowchange(true);
-      this.dialogtitlechange("暂无数据");
-      this.dialogcontentchange("航班暂无排班");
-      this.dialogbuttonchange("返回");
-    } else {
-      //渲染list
-      console.log(localStorage.getExpire("querytoken"));
-      this.list = localStorage.getExpire("querytoken");
-    }
+    //渲染list
+    console.log("gengxin");
+    this.list = localStorage.getExpire("querytoken");
+    this.ondate = this.list[0].date; //显示查询日期
+    this.route1 = this.list[0].route1; //获取查询地址
+    this.route2 = this.list[0].route2;
+    //2021-04-01T16:00:00.000Z utc通用标准时 也可用moment转化
+    this.ondate = new Date(this.ondate).setDate(
+      new Date(this.ondate).getDate()
+    ); //ondate为时间戳格式
   },
   beforeDestroy() {
     this.$store.commit("returnlogochange", false);

@@ -48,6 +48,7 @@ export default {
       "dialogbuttonchange",
       "dialogreturnsbuttonchange",
       "bookshowchange",
+      "reloadchange",
     ]),
     closeDialog() {
       store.commit("dialogshowchange", false);
@@ -140,9 +141,7 @@ export default {
               // localStorage.getExpire("userordertoken").splice(temp, 1);
               //用户航班发生变化更新用户订单信息
               localStorage.removeItem("userorderlisttoken");
-              console.log("nonono");
-              this.$router.push({ path: "/userHome/home" });
-              this.$router.push({ path: "/userHome/travel" });
+              this.reloadchange();
             } else {
               console.log(res);
             }

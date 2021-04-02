@@ -2,10 +2,13 @@
   <div class="App">
     <topTab />
     <transition name="tips">
-      <tipsModel v-if="this.dialogshow" />
+      <tipsModel
+        v-if="this.dialogshow"
+        @handleUpdateClick="handleUpdateClick"
+      />
     </transition>
     <transition>
-      <router-view />
+      <router-view :key="key" />
     </transition>
     <bottomTab />
   </div>
@@ -19,7 +22,9 @@ import tipsModel from "@/userComponents/Model/tipsModel";
 import { mapState } from "vuex";
 export default {
   data() {
-    return {};
+    return {
+      key: 0,
+    };
   },
   components: {
     topTab,
@@ -27,10 +32,18 @@ export default {
     tipsModel,
   },
   computed: {
-    ...mapState(["dialogshow"]),
+    ...mapState(["dialogshow", "reload"]),
   },
-  watch: {}, //$route只能监听子路由变化，无法监听同级或父级路由变化，要全局监听在App.vue文件中监听
-  methods: {},
+  watch: {
+    reload: "handleUpdateClick", //监听退票，使travel更新数据
+  }, //$route只能监听子路由变化，无法监听同级或父级路由变化，要全局监听在App.vue文件中监听
+  methods: {
+    handleUpdateClick() {
+      // built-in
+      this.key += 1;
+      console.log("接收到变化");
+    },
+  },
 };
 </script>
 

@@ -33,8 +33,8 @@ Storage.prototype.getExpire= key =>{
   }
   return val.data;
 }
-// 定义时间格式全局过滤器   YYYY-MM-DD HH:mm:ss
-Vue.filter("dateFormat", function(daraStr, pattern = "MM月DD日") {
+// 定义时间格式全局过滤器   ***YYYY-MM-DD HH:mm:ss
+Vue.filter("dateFormat", function(daraStr, pattern = "YYYY-MM-DD") {
   return moment(daraStr).format(pattern);
 });
 new Vue({

@@ -91,7 +91,11 @@ export default {
       })
         .then((res) => {
           //拿到详细信息数据进行数据处理
-          console.log(res.data);
+          if (res.data == false) {
+            //没有订单时，设置nodata 但本地缓存了userorderlisttoken
+            this.nodata = true;
+            console.log("nono");
+          }
           for (var i = 0; i < res.data.length; i++) {
             if (res.data[i].cabin == 1) {
               res.data[i].cabin = "经济舱";
@@ -193,20 +197,21 @@ export default {
     //   }
     // },
   },
+  created() {},
   mounted() {
     if (localStorage.getExpire("logintoken")) {
       this.nologin = false;
-      if (localStorage.getExpire("userorderlisttoken") == false) {
-        this.nodata = true;
-      } else {
-        //缓存请求数据，减少接口访问
-        if (localStorage.getExpire("userorderlisttoken")) {
-          console.log("存在");
-          this.list = localStorage.getExpire("userorderlisttoken");
-        } else {
-          console.log("不存在");
-          this.getUserOrder();
+      //缓存请求数据，减少接口访问
+      if (localStorage.getExpire("userorderlisttoken")) {
+        console.log("存在");
+        this.list = localStorage.getExpire("userorderlisttoken");
+        //请求数据时，本地缓存了userorderlisttoken(不管有没有订单)
+        if (this.list.length == 0) {
+          this.nodata = true;
         }
+      } else {
+        console.log("不存在");
+        this.getUserOrder();
       }
     }
   },

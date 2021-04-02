@@ -31,6 +31,7 @@
 </template>
 
 <script>
+import { mapMutations } from "vuex";
 import { queryList } from "@/api/index.js";
 export default {
   name: "",
@@ -50,6 +51,12 @@ export default {
   computed: {},
   watch: {},
   methods: {
+    ...mapMutations([
+      "dialogshowchange",
+      "dialogtitlechange",
+      "dialogcontentchange",
+      "dialogreturnsbuttonchange",
+    ]),
     focus() {
       document.documentElement.style.overflow = "hidden";
     },
@@ -75,9 +82,14 @@ export default {
         };
         queryList(param1)
           .then((res) => {
-            if (res.data != "false") {
+            if (res.data != false) {
               localStorage.setExpire("querytoken", res.data);
               this.$store.commit("queryshowchange", true);
+            } else {
+              this.dialogshowchange(true);
+              this.dialogtitlechange("暂无数据");
+              this.dialogcontentchange("航班暂无排班");
+              this.dialogreturnsbuttonchange(true);
             }
           })
           .catch((error) => {
@@ -99,9 +111,14 @@ export default {
         };
         queryList(param2)
           .then((res) => {
-            if (res.data != "false") {
+            if (res.data != false) {
               localStorage.setExpire("querytoken", res.data);
               this.$store.commit("queryshowchange", true);
+            } else {
+              this.dialogshowchange(true);
+              this.dialogtitlechange("暂无数据");
+              this.dialogcontentchange("航班暂无排班");
+              this.dialogreturnsbuttonchange(true);
             }
           })
           .catch((error) => {
