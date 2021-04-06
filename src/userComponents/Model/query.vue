@@ -82,6 +82,7 @@ export default {
         };
         queryList(param1)
           .then((res) => {
+            console.log(res);
             if (res.data != false) {
               localStorage.setExpire("querytoken", res.data);
               this.$store.commit("queryshowchange", true);
@@ -111,6 +112,7 @@ export default {
         };
         queryList(param2)
           .then((res) => {
+            console.log(res);
             if (res.data != false) {
               localStorage.setExpire("querytoken", res.data);
               this.$store.commit("queryshowchange", true);

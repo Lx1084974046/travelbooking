@@ -18,6 +18,8 @@ export default new Vuex.Store({
     flightnum: '',//传递航班号
     cabinnum: '',//传递舱号
     reload:1,//传递退票后同步更新信息
+    oldnum: "", //改签航班号
+    newnum: "", //新航班号
   },
   mutations: {
     titlechange(state, value) {
@@ -58,6 +60,12 @@ export default new Vuex.Store({
     },
     reloadchange(state,value){
       state.reload = state.reload + 1
+    },
+    oldnumchange(state,value){
+      state.oldnum = value
+    },
+    newnumchange(state,value){
+      state.newnum = value
     }
   },
   actions: {},

@@ -34,3 +34,7 @@ export const queryUserList = params =>
 //用户取消航班
 export const refund = params =>
     deletes('/refund',params)
+
+//用户改签航班
+export const rebook = params =>
+    post('/rebook',params)

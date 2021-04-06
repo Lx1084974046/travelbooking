@@ -22,6 +22,7 @@ router.beforeEach((to, from, next) => {
   next();
   if(from.path.search("home") != -1){
     store.commit("bookshowchange", false);
+    store.commit("queryshowchange", false);
   }else if(from.path.search("me") != -1){
     store.commit("updateshowchange", false);
   }

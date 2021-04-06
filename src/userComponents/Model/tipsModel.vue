@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import { bookcheck, book, refund } from "@/api/index.js";
+import { rebook, bookcheck, book, refund } from "@/api/index.js";
 import store from "@/store";
 import { mapState, mapMutations } from "vuex";
 export default {
@@ -37,6 +37,8 @@ export default {
       "bookshow",
       "flightnum",
       "cabinnum",
+      "oldnum",
+      "newnum",
     ]),
   },
   watch: {},
@@ -49,6 +51,7 @@ export default {
       "dialogreturnsbuttonchange",
       "bookshowchange",
       "reloadchange",
+      "queryshowchange",
     ]),
     closeDialog() {
       store.commit("dialogshowchange", false);
@@ -150,9 +153,31 @@ export default {
             console.log(error);
           });
       }
+      //改签
+      if (this.$route.name == "travel" && this.dialogbutton == "改签") {
+        let param3 = {
+          account: localStorage.getExpire("usertoken").user_Account,
+          oldnum: this.oldnum.slice(4),
+          newnum: this.newnum,
+        };
+        rebook(param3)
+          .then((res) => {
+            console.log(res);
+            //用户航班发生变化更新用户订单信息
+            localStorage.removeItem("userorderlisttoken");
+            this.reloadchange();
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
     },
     cancel() {
       this.dialogshowchange(false);
+      if (!this.bookshow && this.$route.name == "homeScreen") {
+        this.queryshowchange(false);
+        this.bookshowchange(false);
+      }
       if (this.bookshow && this.$route.name == "homeScreen") {
         this.bookshowchange(false);
       }

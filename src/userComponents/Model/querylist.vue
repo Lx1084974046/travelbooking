@@ -6,7 +6,7 @@
         <span>{{ this.ondate | dateFormat }}</span>
         <span @click="left">后一天&gt;</span>
       </div>
-      <div class="lists" :key="key">
+      <div class="lists" v-if="listshow">
         <div
           class="ignorelist"
           @click="book(index)"
@@ -129,7 +129,7 @@ export default {
   name: "",
   data() {
     return {
-      key: 0, //刷新list
+      listshow: true, //刷新list
       tipsdate: null,
       currentdate: null,
       bookShow: false,
@@ -163,11 +163,11 @@ export default {
       "flightnumchange",
       "cabinnumchange",
       "queryshowchange",
+      "reloadchange",
     ]),
     handleUpdateClick() {
       // built-in
-      this.key += 1;
-      console.log(this.key);
+      this.reloadchange();
       console.log("接收到变化");
     },
     right() {
@@ -182,6 +182,29 @@ export default {
         this.ondate = new Date(this.ondate).setDate(
           new Date(this.ondate).getDate() - 1
         );
+        let param1 = {
+          date: new Date(this.ondate).toLocaleDateString(),
+          route1: this.route1,
+          route2: this.route2,
+        };
+        console.log("qaaa");
+        queryList(param1)
+          .then((res) => {
+            console.log(res);
+            if (res.data != false) {
+              console.log(res.data);
+              localStorage.setExpire("querytoken", res.data);
+              this.handleUpdateClick();
+            } else {
+              this.dialogshowchange(true);
+              this.dialogtitlechange("暂无数据");
+              this.dialogcontentchange("航班暂无排班");
+              this.dialogreturnsbuttonchange(true);
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       }
     },
     left() {
@@ -201,7 +224,8 @@ export default {
       console.log("qaaa");
       queryList(param2)
         .then((res) => {
-          if (res.data != "false") {
+          console.log(res);
+          if (res.data != false) {
             console.log(res.data);
             localStorage.setExpire("querytoken", res.data);
             this.handleUpdateClick();

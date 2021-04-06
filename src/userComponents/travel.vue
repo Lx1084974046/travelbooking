@@ -26,7 +26,6 @@
           <div class="time-info">
             <span>{{ item.time1 }}</span>
             <span class="route">{{ item.route1 }}</span>
-
             <i></i>
             <span class="route">{{ item.route2 }}</span>
             <span>{{ item.time2 }}</span>
@@ -41,26 +40,85 @@
             >{{ item.cabin }}</span
           >
           <div class="bottom-btn">
-            <i @click="rebook(item.flightNum)">改签</i>
-            <i @click="refund(item.flightNum)">退票</i>
+            <i @click="rebooks(index)">改签</i>
+            <i @click="refund(index)">退票</i>
           </div>
         </div>
         <div class="bottom"></div>
       </div>
     </div>
+    <div class="rebook" v-if="reb">
+      <div class="date-container">
+        <span class="tip-title">改签至:</span>
+        <div>
+          <span
+            class="btn"
+            @click="left"
+            :style="
+              Date.parse(new Date().toLocaleDateString()) == this.date
+                ? 'color:#a9a9a9'
+                : ''
+            "
+            >&lt;</span
+          >
+          <transition
+            ><span>{{ this.date | dateFormat }}</span></transition
+          >
+          <span class="btn" @click="right">&gt;</span>
+        </div>
+        <el-button type="success" @click="rebookquery">确认</el-button>
+      </div>
+    </div>
+    <div class="query-list1" v-if="listshow">
+      <div class="list1s">
+        <div
+          class="ignorelist1"
+          @click="book(index)"
+          v-for="(item, index) in list1"
+          :key="index"
+        >
+          <div class="time-info1">
+            <span>{{ item.time1 }}</span>
+            <i></i>
+            <span>{{ item.time2 }}</span>
+          </div>
+          <div class="locale-info1">
+            <span>{{ item.route1 }}</span>
+            <span>{{ item.route2 }}</span>
+          </div>
+          <div class="bottom-info1">
+            <img
+              :src="require('.././assets/airline/' + item.airline + '.png')"
+              alt=""
+            />
+            <!-- vue中图片在本地，路径是动态请求过来的，拼接图片路径必须要用require -->
+            <span>{{ item.flightNum }}</span>
+            <span>{{ item.type }}型机</span>
+            <span>余票：{{ item.poll }}</span>
+          </div>
+        </div>
+      </div>
+      <el-button @click="noreb">取消</el-button>
+    </div>
   </div>
 </template>
 
 <script>
-import { queryUserList } from "@/api/index.js";
+import { queryList, queryUserList } from "@/api/index.js";
 import { mapMutations } from "vuex";
 export default {
   name: "",
   data() {
     return {
+      reb: false,
       nologin: true,
       nodata: false,
       list: [],
+      list1: [], //改签航班信息
+      date: "", //改签日期
+      listshow: false,
+      route1: "", //改签地址
+      route2: "",
     };
   },
   computed: {},
@@ -73,12 +131,69 @@ export default {
       "dialogbuttonchange",
       "dialogreturnsbuttonchange",
       "flightnumchange",
+      "oldnumchange",
+      "newnumchange",
     ]),
-    rebook() {
-      console.log("改签");
+    book(index) {
+      console.log(this.list1[index].flightNum);
+      this.newnumchange(this.list1[index].flightNum);
+      this.dialogshowchange(true);
+      this.dialogtitlechange("改签");
+      this.dialogcontentchange(
+        "确认将航班改签为" + this.list1[index].flightNum + "航班"
+      );
+      this.dialogbuttonchange("改签");
+      this.dialogreturnsbuttonchange(true);
+    },
+    noreb() {
+      this.reb = false;
+      this.listshow = false;
+    },
+    rebookquery() {
+      let param = {
+        date: new Date(this.date).toLocaleDateString(),
+        route1: this.route1,
+        route2: this.route2,
+      };
+      queryList(param)
+        .then((res) => {
+          if (res.data != false) {
+            this.list1 = res.data;
+            this.listshow = true;
+          } else {
+            this.dialogshowchange(true);
+            this.dialogtitlechange("暂无数据");
+            this.dialogcontentchange("航班暂无排班");
+            this.dialogreturnsbuttonchange(true);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    left() {
+      if (Date.parse(new Date().toLocaleDateString()) != this.date) {
+        this.date = new Date(this.date).setDate(
+          new Date(this.date).getDate() - 1
+        );
+      }
+    },
+    right() {
+      this.date = new Date(this.date).setDate(
+        new Date(this.date).getDate() + 1
+      );
+    },
+    rebooks(index) {
+      this.reb = true;
+      this.oldnumchange(this.list[index].flightNum);
+      this.date = new Date(this.list[index].date).setDate(
+        new Date(this.list[index].date).getDate() + 1
+      );
+      this.route1 = this.list[index].route1;
+      this.route2 = this.list[index].route2;
     },
     refund(index) {
-      this.flightnumchange(index.slice(4));
+      this.flightnumchange(this.list[index].flightNum.slice(4));
       this.dialogshowchange(true);
       this.dialogtitlechange("退票");
       this.dialogcontentchange("您确认取消本次旅行？");
@@ -310,7 +425,7 @@ export default {
   color: #cdcdcd;
 }
 .bottom-info {
-  width: 86%;
+  width: 92%;
   display: flex;
   align-items: center;
   margin-top: 10px;
@@ -372,5 +487,132 @@ hr {
   position: absolute;
   bottom: 8px;
   left: 10px;
+}
+.rebook {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 9999;
+  background-color: rgba(0, 0, 0, 0.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.date-container {
+  width: 80%;
+  height: 20%;
+  border-radius: 6px;
+  background-color: #fff;
+  margin-top: -80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+.tip-title {
+  margin-top: 10px;
+  font-size: 20px;
+}
+.date-container div {
+  width: 50%;
+  display: flex;
+  justify-content: space-between;
+  font-size: 18px;
+}
+.date-container .btn {
+  color: #409eff;
+}
+.date-container .el-button {
+  margin-bottom: 10px;
+}
+</style>
+<style lang="stylus" scoped>
+.query-list1 {
+  position: absolute;
+  top: 20px;
+  width: 90%;
+  height: 65vh;
+  z-index: 9999;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+
+  .el-button {
+    width: 20%;
+    background-color: #ffa500;
+  }
+}
+
+.list1s {
+  width: 100%;
+  height: 90%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-y: scroll;
+  background-color: #efeff4;
+}
+
+.list1s .ignorelist1 {
+  width: 92%;
+  height: 118px;
+  border-radius: 6px;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  margin-top: 10px;
+  background-color: #fff;
+  position: relative;
+}
+
+.ignorelist1 img {
+  width: 20px;
+  height: 20px;
+}
+
+.time-info1, .locale-info1 {
+  width: 60%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-left: 15px;
+}
+
+.time-info1 {
+  margin-top: 15px;
+}
+
+.time-info1 span {
+  font-size: 26px;
+}
+
+.time-info1 i {
+  display: inline-block;
+  width: 100px;
+  height: 30px;
+  background: url('~@/assets/airline/arrow.png') center center no-repeat;
+  background-size: cover;
+}
+
+.locale-info1 span {
+  margin: 0 15px;
+  color: #cdcdcd;
+}
+
+.bottom-info1 {
+  width: 65%;
+  display: flex;
+  align-items: center;
+  margin-top: 8px;
+  margin-left: 20px;
+  margin-bottom: 6px;
+}
+
+.bottom-info1 span {
+  margin-left: 12px;
+  font-size: 14px;
+  color: #8a8a8a;
 }
 </style>
