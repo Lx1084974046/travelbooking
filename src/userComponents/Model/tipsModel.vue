@@ -193,8 +193,11 @@ export default {
 <style scoped>
 .tips {
   width: 100%;
-  height: 106vh;
+  height: 100vh;
   background-color: rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 .tipsmodel {
   width: 75%;
@@ -202,7 +205,6 @@ export default {
   background-color: #fff;
   border-radius: 10px;
   margin: 0 auto;
-  margin-top: 45%;
   display: flex;
   flex-direction: column;
   justify-content: center;
