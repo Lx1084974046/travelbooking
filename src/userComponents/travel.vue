@@ -184,21 +184,75 @@ export default {
       );
     },
     rebooks(index) {
-      this.reb = true;
-      this.oldnumchange(this.list[index].flightNum);
-      this.date = new Date(this.list[index].date).setDate(
-        new Date(this.list[index].date).getDate() + 1
-      );
-      this.route1 = this.list[index].route1;
-      this.route2 = this.list[index].route2;
+      if (
+        Date.parse(
+          new Date(this.list[index].date).toLocaleDateString() +
+            " " +
+            this.list[index].time1
+        ) -
+          45 * 60 * 1000 >
+        Date.parse(new Date())
+      ) {
+        this.reb = true;
+        this.oldnumchange(this.list[index].flightNum);
+        this.date = new Date(this.list[index].date).setDate(
+          new Date(this.list[index].date).getDate() + 1
+        );
+        this.route1 = this.list[index].route1;
+        this.route2 = this.list[index].route2;
+      } else if (
+        Date.parse(new Date()) >
+        Date.parse(
+          new Date(this.list[index].date).toLocaleDateString() +
+            " " +
+            this.list[index].time1
+        )
+      ) {
+        this.dialogshowchange(true);
+        this.dialogtitlechange("改签");
+        this.dialogcontentchange("航班已进行无法改签");
+        this.dialogreturnsbuttonchange(true);
+      } else {
+        this.dialogshowchange(true);
+        this.dialogtitlechange("改签");
+        this.dialogcontentchange("航班起飞前45分钟内无法改签");
+        this.dialogreturnsbuttonchange(true);
+      }
     },
     refund(index) {
-      this.flightnumchange(this.list[index].flightNum.slice(4));
-      this.dialogshowchange(true);
-      this.dialogtitlechange("退票");
-      this.dialogcontentchange("您确认取消本次旅行？");
-      this.dialogbuttonchange("确认");
-      this.dialogreturnsbuttonchange(true);
+      if (
+        Date.parse(
+          new Date(this.list[index].date).toLocaleDateString() +
+            " " +
+            this.list[index].time1
+        ) -
+          45 * 60 * 1000 >
+        Date.parse(new Date())
+      ) {
+        this.flightnumchange(this.list[index].flightNum.slice(4));
+        this.dialogshowchange(true);
+        this.dialogtitlechange("退票");
+        this.dialogcontentchange("您确认取消本次旅行？");
+        this.dialogbuttonchange("确认");
+        this.dialogreturnsbuttonchange(true);
+      } else if (
+        Date.parse(new Date()) >
+        Date.parse(
+          new Date(this.list[index].date).toLocaleDateString() +
+            " " +
+            this.list[index].time1
+        )
+      ) {
+        this.dialogshowchange(true);
+        this.dialogtitlechange("退票");
+        this.dialogcontentchange("航班已进行无法退票");
+        this.dialogreturnsbuttonchange(true);
+      } else {
+        this.dialogshowchange(true);
+        this.dialogtitlechange("退票");
+        this.dialogcontentchange("航班起飞前45分钟内无法退票");
+        this.dialogreturnsbuttonchange(true);
+      }
     },
     getUserOrder() {
       queryUserList({
@@ -341,7 +395,7 @@ export default {
   flex-direction: column;
   align-items: center;
   position: fixed;
-  margin-top: 50px;
+  margin-top: 6.8vh;
 }
 .nologin i {
   width: 300px;

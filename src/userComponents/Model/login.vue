@@ -126,7 +126,7 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100%;
+  height: 85vh;
 }
 .btn {
   margin-top: 20px;

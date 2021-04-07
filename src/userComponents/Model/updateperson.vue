@@ -43,6 +43,8 @@ export default {
       "dialogtitlechange",
       "dialogcontentchange",
       "dialogbuttonchange",
+      "updateshowchange",
+      "reloadchange",
     ]),
     updateNickname() {
       if (this.nickname) {
@@ -59,8 +61,11 @@ export default {
                 duration: 600,
               });
               localStorage.removeItem("usertoken");
+              let _this = this;
               setTimeout(function () {
-                location.reload();
+                _this.updateshowchange(false);
+                _this.reloadchange();
+                console.log("接收到变化");
               }, 800);
             } else {
               this.$message.error("昵称更换失败");

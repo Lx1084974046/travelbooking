@@ -41,7 +41,7 @@ export default {
 <style scoped>
 .app {
   width: 100%;
-  height: 58.88px;
+  height: 8vh;
   background-color: #fff;
   display: flex;
   flex-direction: row;

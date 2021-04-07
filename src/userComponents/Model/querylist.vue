@@ -165,6 +165,7 @@ export default {
       "queryshowchange",
       "reloadchange",
     ]),
+    //更新页面数据
     handleUpdateClick() {
       // built-in
       this.reloadchange();
@@ -178,7 +179,7 @@ export default {
         this.dialogcontentchange("无法查看历史航班");
         this.dialogreturnsbuttonchange(true);
       } else {
-        let temp = Vue.filter("dateFormat");
+        // let temp = Vue.filter("dateFormat");
         this.ondate = new Date(this.ondate).setDate(
           new Date(this.ondate).getDate() - 1
         );

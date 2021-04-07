@@ -6,7 +6,7 @@ export default [
   {
     path: "/userHome",
     name: "userHome",
-    component: () => import("../userViews/homePage.vue"),
+    component: () => import("../userViews/homePage.vue"),//路由懒加载
     children: [
       {
         path: "home",

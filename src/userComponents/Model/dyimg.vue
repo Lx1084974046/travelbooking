@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="dyapp">
     <div id="demo">
       <!-- 遮罩层 -->
       <div class="container" v-show="panel">
@@ -575,5 +575,8 @@ export default {
 .updateFile {
   margin-top: 20px;
   margin-left: 128px;
+}
+input {
+  filter: url("../../assets/logo.png");
 }
 </style>

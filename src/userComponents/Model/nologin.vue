@@ -28,8 +28,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 100%;
-  margin-top: 50px;
+  height: 85vh;
 }
 i {
   width: 300px;

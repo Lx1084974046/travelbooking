@@ -11,7 +11,7 @@
 }
 
 #app {
-  height: 736px;
+  height: 100vh;
   overflow: hidden scroll;
 }
 

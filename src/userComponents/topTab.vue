@@ -19,12 +19,14 @@ export default {
   methods: {
     ...mapMutations([
       "updateshowchange",
+      "dynamicshowchange",
       "returnlogochange",
       "queryshowchange",
       "bookshowchange",
     ]),
     returnPerson() {
       if (this.$route.name == "person") {
+        this.dynamicshowchange(false);
         this.updateshowchange(false);
         this.returnlogochange(false);
       } else if (
@@ -47,7 +49,7 @@ export default {
 <style scoped>
 .app {
   width: 100%;
-  height: 50px;
+  height: 6.8vh;
   display: flex;
   justify-content: center;
   align-items: center;

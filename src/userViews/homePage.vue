@@ -8,6 +8,7 @@
       />
     </transition>
     <transition>
+      <!-- :key控制子组件刷新同步数据更新 -->
       <router-view :key="key" />
     </transition>
     <bottomTab />
@@ -35,12 +36,13 @@ export default {
     ...mapState(["dialogshow", "reload"]),
   },
   watch: {
+    //reload为监听对象，reload发生变化，执行handleUpdateClick
     reload: "handleUpdateClick", //监听退票、next查询航班，使travel更新数据(vue无法监测数组或对象的变化)
   }, //$route只能监听子路由变化，无法监听同级或父级路由变化，要全局监听在App.vue文件中监听
   methods: {
     handleUpdateClick() {
       // built-in
-      this.key += 1;
+      this.key += 1; //key值发生变化，所绑定组件自动刷新 => perfect
       console.log("接收到变化");
     },
   },

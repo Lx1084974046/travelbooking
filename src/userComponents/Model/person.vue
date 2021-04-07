@@ -13,7 +13,7 @@
     <div class="btn1" @click="goUpdatePerson">
       <span>修改个人资料</span><i>></i>
     </div>
-    <div class="btn1"><span>我的动态</span><i>></i></div>
+    <div class="btn1" @click="dynamic"><span>我的动态</span><i>></i></div>
     <el-row
       ><el-button type="danger" round @click="loginout"
         >注销登录</el-button
@@ -22,10 +22,33 @@
     <transition>
       <updateperson :avatar="avatar" v-if="updateshow" />
     </transition>
+    <transition>
+      <div class="mydynamic" v-if="dynamicshow">
+        <i></i>
+        <el-input
+          type="textarea"
+          placeholder="请输入内容"
+          v-model="dytext"
+          maxlength="30"
+          show-word-limit
+        >
+        </el-input>
+        <div class="upimg">
+          <i class="del" v-if="url" @click="clearFile"></i>
+          <input type="file" @change="change" ref="clearFile" />
+          <i class="up"></i>
+          <el-image v-if="url" :src="url" :preview-src-list="srcList">
+          </el-image>
+        </div>
+        <el-button type="success" @click="send">发表</el-button>
+      </div>
+    </transition>
   </div>
 </template>
 
 <script>
+import base64Img from "../../utils/2base64Img";
+import dyimg from "../Model/dyimg";
 import { mapState, mapMutations } from "vuex";
 import { userFind } from "@/api/index.js";
 import updateperson from "./updateperson";
@@ -38,13 +61,18 @@ export default {
       nickname: "",
       avatar: "",
       sex: "",
+      dytext: "",
+      url: "",
+      picValue: "",
+      srcList: [],
     };
   },
   components: {
     updateperson,
+    dyimg,
   },
   computed: {
-    ...mapState(["updateshow"]),
+    ...mapState(["updateshow", "dynamicshow"]),
   },
   watch: {},
   methods: {
@@ -55,8 +83,59 @@ export default {
       "dialogbuttonchange",
       "dialogreturnsbuttonchange",
       "updateshowchange",
+      "dynamicshowchange",
       "returnlogochange",
     ]),
+    send() {
+      if (this.dytext == "") {
+        this.dialogtitlechange("发表失败");
+        this.dialogcontentchange("请先输入文案");
+        this.dialogreturnsbuttonchange(true);
+        this.dialogshowchange(true);
+      } else if (this.url == "") {
+        this.dialogtitlechange("发表失败");
+        this.dialogcontentchange("请先添加图片");
+        this.dialogreturnsbuttonchange(true);
+        this.dialogshowchange(true);
+      } else {
+        console.log("success");
+      }
+    },
+    clearFile() {
+      this.$refs.clearFile.value = "";
+      this.url = "";
+      this.srcList = [];
+    },
+    getObjectURL(file) {
+      var url = null;
+      if (window.createObjectURL != undefined) {
+        // basic
+        url = window.createObjectURL(file);
+      } else if (window.URL != undefined) {
+        // mozilla(firefox)
+        url = window.URL.createObjectURL(file);
+      } else if (window.webkitURL != undefined) {
+        // webkit or chrome
+        url = window.webkitURL.createObjectURL(file);
+      }
+      return url;
+    },
+    change(e) {
+      let files = e.target.files || e.dataTransfer.files;
+      if (!files.length) return;
+      this.picValue = files[0];
+      this.url = this.getObjectURL(this.picValue);
+      //每次替换图片要重新得到新的url
+      this.srcList.push(this.url);
+      console.log(this.url);
+      base64Img.base64Img(this.url).then((res) => {
+        console.log(res);
+      });
+    },
+    dynamic() {
+      this.returnlogochange(true);
+      this.dynamicshowchange(true);
+    },
     getUser() {
       //判断是否登录
       if (localStorage.getExpire("logintoken") == null) {
@@ -132,17 +211,20 @@ export default {
   mounted() {
     this.getUser(); //页面挂载时，进行用户数据获取，顺便进行了判断登录状态
   },
+  beforeDestroy() {
+    this.dynamicshowchange(false);
+    this.returnlogochange(false);
+  },
 };
 </script>
 
 <style scoped>
 .per {
   width: 100%;
-  height: 100%;
+  height: 85vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 50px;
 }
 .btn {
   display: flex;
@@ -202,5 +284,68 @@ export default {
 .v-enter-active,
 .v-leave-active {
   transition: all 0.5s ease;
+}
+.mydynamic {
+  width: 100%;
+  height: 85vh;
+  background-color: #efeff4;
+  position: absolute;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.mydynamic i {
+  display: block;
+  width: 307px;
+  height: 86px;
+  background: url("../../assets/userimg/mydynamic.png") no-repeat;
+}
+.mydynamic .el-textarea {
+  width: 307px;
+  height: 90px;
+  margin-bottom: 20px;
+}
+</style>
+<style>
+.mydynamic .el-textarea__inner {
+  height: 90px;
+}
+.upimg {
+  margin-top: 10px;
+  width: 128px;
+  height: 128px;
+  position: relative;
+  margin-bottom: 20px;
+}
+.mydynamic .upimg .del {
+  display: block;
+  position: absolute;
+  right: -28px;
+  top: -28px;
+  width: 26px;
+  height: 26px;
+  z-index: 99;
+  background: url("../../assets/userimg/delete.png") no-repeat;
+  background-size: contain;
+}
+.mydynamic .upimg .up {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: url("../../assets/userimg/upload.png") no-repeat;
+}
+.upimg input {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  opacity: 0;
+}
+.upimg .el-image {
+  width: 160px;
+  height: 160px;
+  position: absolute;
+  top: -16px;
+  left: -16px;
 }
 </style>

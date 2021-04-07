@@ -178,7 +178,7 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100%;
+  height: 85vh;
 }
 span {
   font-size: 20px;

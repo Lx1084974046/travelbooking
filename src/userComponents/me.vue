@@ -24,6 +24,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-top: 6.8vh;
 }
 .v-enter {
   opacity: 0.3;
