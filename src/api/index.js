@@ -38,3 +38,11 @@ export const refund = params =>
 //用户改签航班
 export const rebook = params =>
     post('/rebook',params)
+
+//用户发圈
+export const dynamic = params =>
+    post('/dynamic',params)
+
+//查询用户发圈动态信息
+export const findDynamic = params =>
+    get('/findDynamic',params)

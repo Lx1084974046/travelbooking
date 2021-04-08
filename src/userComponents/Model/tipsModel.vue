@@ -62,6 +62,7 @@ export default {
         localStorage.removeItem("logintoken");
         localStorage.removeItem("usertoken");
         localStorage.removeItem("userorderlisttoken");
+        localStorage.removeItem("mydynamictoken");
         this.$router.push({ path: "/userHome/me/nologin" });
       }
       if (!this.bookshow && this.$route.name == "homeScreen") {

@@ -23,7 +23,43 @@
       <updateperson :avatar="avatar" v-if="updateshow" />
     </transition>
     <transition>
-      <div class="mydynamic" v-if="dynamicshow">
+      <div class="mydynamic" v-if="mydynamicshow">
+        <i class="write" @click="wirteDynamic">
+          <img src="@/assets/userimg/pen.png" alt="" />
+        </i>
+        <div class="nodynamic" v-if="this.nodynamic">
+          <i class="dynamic-1"></i>
+          <i class="dynamic-2"></i>
+          <el-tag>暂无动态</el-tag>
+        </div>
+        <div class="dynamic-list" v-else>
+          <div
+            class="dynamic-container"
+            v-for="(item, index) in mydynamic"
+            :key="index"
+            :avatar="avatar"
+            :nickname="nickname"
+          >
+            <!-- v-for里面无法获取到data数据，需绑定传入，注意传入后的使用方式 -->
+            <div class="user-info">
+              <img class="dyavatar" :src="avatar" alt="" />
+              <span>{{ nickname == "未设置" ? this.ID : nickname }}</span>
+            </div>
+            <span class="text">{{ item.text }}</span>
+            <el-image
+              :src="'http://localhost:3000/public/src/img/' + item.img"
+              :preview-src-list="[
+                'http://localhost:3000/public/src/img/' + item.img,
+              ]"
+              lazy
+            >
+            </el-image>
+          </div>
+        </div>
+      </div>
+    </transition>
+    <transition name="send">
+      <div class="senddynamic" v-if="senddynamicshow">
         <i></i>
         <el-input
           type="textarea"
@@ -50,13 +86,13 @@
 import base64Img from "../../utils/2base64Img";
 import dyimg from "../Model/dyimg";
 import { mapState, mapMutations } from "vuex";
-import { userFind } from "@/api/index.js";
+import { userFind, dynamic, findDynamic } from "@/api/index.js";
 import updateperson from "./updateperson";
 export default {
   name: "",
   data() {
     return {
-      ID: "123",
+      ID: "",
       // IDcard: "",
       nickname: "",
       avatar: "",
@@ -65,6 +101,9 @@ export default {
       url: "",
       picValue: "",
       srcList: [],
+      imgbase64: null,
+      nodynamic: false,
+      mydynamic: [],
     };
   },
   components: {
@@ -72,7 +111,7 @@ export default {
     dyimg,
   },
   computed: {
-    ...mapState(["updateshow", "dynamicshow"]),
+    ...mapState(["updateshow", "senddynamicshow", "mydynamicshow"]),
   },
   watch: {},
   methods: {
@@ -83,9 +122,14 @@ export default {
       "dialogbuttonchange",
       "dialogreturnsbuttonchange",
       "updateshowchange",
-      "dynamicshowchange",
+      "senddynamicshowchange",
+      "mydynamicshowchange",
       "returnlogochange",
+      "reloadchange",
     ]),
+    wirteDynamic() {
+      this.senddynamicshowchange(true);
+    },
     send() {
       if (this.dytext == "") {
         this.dialogtitlechange("发表失败");
@@ -99,6 +143,38 @@ export default {
         this.dialogshowchange(true);
       } else {
         console.log("success");
+        let dynum = null;
+        if (localStorage.getExpire("mydynamictoken") == false) {
+          dynum = 1;
+        } else {
+          dynum = localStorage.getExpire("mydynamictoken").length + 1;
+        }
+        let params = {
+          account:
+            localStorage.getExpire("usertoken").user_Account + "-" + dynum, //作为用户每条动态的身份标识
+          user_Account: localStorage.getExpire("usertoken").user_Account,
+          text: this.dytext,
+          content: this.imgbase64,
+        };
+        dynamic(params)
+          .then((res) => {
+            if (res.data == true) {
+              this.$message({
+                message: "发表成功",
+                type: "success",
+                duration: 600,
+              });
+              localStorage.removeItem("mydynamictoken");
+              let _this = this;
+              setTimeout(function () {
+                _this.senddynamicshowchange(false);
+                _this.reloadchange();
+                _this.mydynamicshowchange(true);
+                console.log("接收到变化");
+              }, 800);
+            }
+          })
+          .catch();
       }
     },
     clearFile() {
@@ -129,12 +205,37 @@ export default {
       this.srcList.push(this.url);
       console.log(this.url);
       base64Img.base64Img(this.url).then((res) => {
-        console.log(res);
+        this.imgbase64 = res;
       });
     },
     dynamic() {
       this.returnlogochange(true);
-      this.dynamicshowchange(true);
+      this.mydynamicshowchange(true);
+      //缓存请求
+      if (localStorage.getExpire("mydynamictoken")) {
+        console.log("存在");
+        this.mydynamic = localStorage.getExpire("mydynamictoken");
+        if (this.mydynamic.length == 0) {
+          this.nodynamic = true;
+        }
+      } else {
+        console.log("bu存在");
+        findDynamic({
+          account: localStorage.getExpire("usertoken").user_Account,
+        })
+          .then((res) => {
+            if (res.data == false) {
+              this.nodynamic = true;
+            } else {
+              this.mydynamic = res.data;
+            }
+            //session为空数组时，也为true
+            localStorage.setExpire("mydynamictoken", this.mydynamic);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
     },
     getUser() {
       //判断是否登录
@@ -164,8 +265,7 @@ export default {
                 this.nickname = res.data[0].user_nickname;
               }
               this.avatar =
-                "http://localhost:3000" +
-                "/public/src/img/avatars/" +
+                "http://localhost:3000/public/src/img/avatars/" +
                 res.data[0].user_avatar;
             }) //访问 localhost 的 net::ERR_UNKNOWN_URL_SCHEME 问题 解决方案是在 localhost 前面加上协议名：http://
             .catch((error) => {
@@ -190,8 +290,7 @@ export default {
             this.nickname = userInfo.user_nickname;
           }
           this.avatar =
-            "http://localhost:3000" +
-            "/public/src/img/avatars/" +
+            "http://localhost:3000/public/src/img/avatars/" +
             userInfo.user_avatar;
         }
       }
@@ -212,7 +311,8 @@ export default {
     this.getUser(); //页面挂载时，进行用户数据获取，顺便进行了判断登录状态
   },
   beforeDestroy() {
-    this.dynamicshowchange(false);
+    this.mydynamicshowchange(false);
+    this.senddynamicshowchange(false);
     this.returnlogochange(false);
   },
 };
@@ -285,6 +385,7 @@ export default {
 .v-leave-active {
   transition: all 0.5s ease;
 }
+.senddynamic,
 .mydynamic {
   width: 100%;
   height: 85vh;
@@ -295,20 +396,20 @@ export default {
   flex-direction: column;
   align-items: center;
 }
-.mydynamic i {
+.senddynamic i {
   display: block;
   width: 307px;
   height: 86px;
   background: url("../../assets/userimg/mydynamic.png") no-repeat;
 }
-.mydynamic .el-textarea {
+.senddynamic .el-textarea {
   width: 307px;
   height: 90px;
   margin-bottom: 20px;
 }
 </style>
 <style>
-.mydynamic .el-textarea__inner {
+.senddynamic .el-textarea__inner {
   height: 90px;
 }
 .upimg {
@@ -318,7 +419,7 @@ export default {
   position: relative;
   margin-bottom: 20px;
 }
-.mydynamic .upimg .del {
+.senddynamic .upimg .del {
   display: block;
   position: absolute;
   right: -28px;
@@ -329,7 +430,7 @@ export default {
   background: url("../../assets/userimg/delete.png") no-repeat;
   background-size: contain;
 }
-.mydynamic .upimg .up {
+.senddynamic .upimg .up {
   display: block;
   width: 100%;
   height: 100%;
@@ -347,5 +448,91 @@ export default {
   position: absolute;
   top: -16px;
   left: -16px;
+}
+.mydynamic {
+  justify-content: center;
+}
+.mydynamic .write {
+  position: absolute;
+  top: 0;
+  display: inline-block;
+  width: 100%;
+  height: 4.5vh;
+  text-align: center;
+  background-color: #fff;
+}
+.nodynamic {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.nodynamic .dynamic-1 {
+  display: block;
+  width: 160px;
+  height: 160px;
+  background: url("~@/assets/userimg/dynamic.png") no-repeat;
+}
+.nodynamic .dynamic-2 {
+  display: block;
+  width: 400px;
+  height: 61px;
+  background: url("~@/assets/userimg/nodynamic.png") no-repeat;
+  background-size: contain;
+}
+.send-enter {
+  opacity: 0.3;
+  transform: translateY(-100%);
+}
+.send-leave-to {
+  opacity: 0.3;
+  transform: translateY(100%);
+  position: absolute;
+}
+.send-enter-active,
+.send-leave-active {
+  transition: all 0.5s ease;
+}
+.mydynamic .dynamic-list {
+  width: 100%;
+  height: 80.5vh;
+  margin-top: 4.5vh;
+  background-color: #f5f5f5;
+  overflow-y: scroll;
+}
+.dynamic-list .dyavatar {
+  width: 32px;
+  height: 32px;
+}
+</style>
+<style lang="stylus" scoped>
+.dynamic-container {
+  width: 100%;
+  height: 30vh;
+  background-color: #fff;
+  margin: 10px 0;
+  overflow: hidden; // 避免边距塌陷
+
+  .user-info {
+    height: 36px;
+    display: flex;
+    align-items: center;
+    margin: 10px;
+
+    span {
+      margin-left: 10px;
+    }
+  }
+
+  .text {
+    margin: 0 30px;
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  .el-image {
+    width: 100px;
+    height: 100px;
+    margin-left: 30px;
+  }
 }
 </style>

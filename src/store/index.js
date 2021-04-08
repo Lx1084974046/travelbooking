@@ -12,7 +12,8 @@ export default new Vuex.Store({
     dialogbutton: '',
     returns: false,
     updateshow: false,
-    dynamicshow:false,
+    senddynamicshow:false,
+    mydynamicshow: false,
     returnlogo: false,
     queryshow:false,
     bookshow: false,
@@ -68,8 +69,11 @@ export default new Vuex.Store({
     newnumchange(state,value){
       state.newnum = value
     },
-    dynamicshowchange(state,value){
-      state.dynamicshow = value
+    senddynamicshowchange(state,value){
+      state.senddynamicshow = value
+    },
+    mydynamicshowchange(state,value){
+      state.mydynamicshow = value
     }
   },
   actions: {},

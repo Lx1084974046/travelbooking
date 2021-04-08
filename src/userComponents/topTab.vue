@@ -13,22 +13,29 @@ export default {
     return {};
   },
   computed: {
-    ...mapState(["title", "returnlogo"]),
+    ...mapState(["title", "returnlogo", "mydynamicshow", "senddynamicshow"]),
   },
   watch: {},
   methods: {
     ...mapMutations([
       "updateshowchange",
-      "dynamicshowchange",
+      "senddynamicshowchange",
+      "mydynamicshowchange",
       "returnlogochange",
       "queryshowchange",
       "bookshowchange",
     ]),
     returnPerson() {
       if (this.$route.name == "person") {
-        this.dynamicshowchange(false);
+        if (this.senddynamicshow == false) {
+          this.mydynamicshowchange(false);
+        }
+        this.senddynamicshowchange(false);
         this.updateshowchange(false);
         this.returnlogochange(false);
+        if (this.mydynamicshow == true) {
+          this.returnlogochange(true);
+        }
       } else if (
         this.$route.name == "homeScreen" &&
         !this.$store.state.bookshow
