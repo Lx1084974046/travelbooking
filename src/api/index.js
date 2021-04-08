@@ -46,3 +46,7 @@ export const dynamic = params =>
 //查询用户发圈动态信息
 export const findDynamic = params =>
     get('/findDynamic',params)
+
+//删除动态
+export const delDynamic = params =>
+    deletes('/delDynamic',params)

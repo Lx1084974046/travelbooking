@@ -19,9 +19,10 @@ export default new Vuex.Store({
     bookshow: false,
     flightnum: '',//传递航班号
     cabinnum: '',//传递舱号
-    reload:1,//传递退票后同步更新信息
+    reload:1,//传递退票后同步更新信息+页面所有需要手动触发更新页面数据的
     oldnum: "", //改签航班号
     newnum: "", //新航班号
+    dynum: "",//动态编号
   },
   mutations: {
     titlechange(state, value) {
@@ -74,6 +75,9 @@ export default new Vuex.Store({
     },
     mydynamicshowchange(state,value){
       state.mydynamicshow = value
+    },
+    dynumchange(state,value){
+      state.dynum = value
     }
   },
   actions: {},

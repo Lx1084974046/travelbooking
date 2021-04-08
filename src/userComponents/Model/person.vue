@@ -23,7 +23,7 @@
       <updateperson :avatar="avatar" v-if="updateshow" />
     </transition>
     <transition>
-      <div class="mydynamic" v-if="mydynamicshow">
+      <div class="mydynamic" v-if="mydynamicshow" @click="nopoint" :key="this.uppage">
         <i class="write" @click="wirteDynamic">
           <img src="@/assets/userimg/pen.png" alt="" />
         </i>
@@ -35,21 +35,24 @@
         <div class="dynamic-list" v-else>
           <div
             class="dynamic-container"
-            v-for="(item, index) in mydynamic"
+            v-for="(item, index) in mydynamiclist"
             :key="index"
             :avatar="avatar"
             :nickname="nickname"
+            :ID="ID"
           >
             <!-- v-for里面无法获取到data数据，需绑定传入，注意传入后的使用方式 -->
             <div class="user-info">
               <img class="dyavatar" :src="avatar" alt="" />
-              <span>{{ nickname == "未设置" ? this.ID : nickname }}</span>
+              <span>{{ nickname == "未设置" ? ID : nickname }}</span>
+               <i class="point" @click.stop="point(index)"></i>
+               <el-button @click="deldynamic(index)" v-if="index == deldybtnshow" type="danger" size="mini" icon="el-icon-delete" circle></el-button>
             </div>
             <span class="text">{{ item.text }}</span>
             <el-image
-              :src="'http://localhost:3000/public/src/img/' + item.img"
+              :src="'http://localhost:3000/public/src/img/dynamic/' + item.img"
               :preview-src-list="[
-                'http://localhost:3000/public/src/img/' + item.img,
+                'http://localhost:3000/public/src/img/dynamic/' + item.img,
               ]"
               lazy
             >
@@ -103,7 +106,9 @@ export default {
       srcList: [],
       imgbase64: null,
       nodynamic: false,
-      mydynamic: [],
+      mydynamiclist: [],
+      deldybtnshow: null,
+      uppage:0,
     };
   },
   components: {
@@ -111,7 +116,7 @@ export default {
     dyimg,
   },
   computed: {
-    ...mapState(["updateshow", "senddynamicshow", "mydynamicshow"]),
+    ...mapState(["updateshow", "senddynamicshow", "mydynamicshow",]),
   },
   watch: {},
   methods: {
@@ -126,7 +131,23 @@ export default {
       "mydynamicshowchange",
       "returnlogochange",
       "reloadchange",
+      "dynumchange",
     ]),
+    deldynamic(index){
+      this.dynumchange(this.mydynamiclist[index].img)
+      this.dialogtitlechange("删除动态");
+      this.dialogcontentchange("确认删除该条动态？");
+      this.dialogbuttonchange('删除')
+      this.dialogreturnsbuttonchange(true);
+      this.dialogshowchange(true);
+    },
+    nopoint(){
+      this.deldybtnshow = null;
+    },
+    //天才小技巧，实现v-for中的指定显示，牢记以后会常用~
+    point(index){
+      this.deldybtnshow = index;
+    },
     wirteDynamic() {
       this.senddynamicshowchange(true);
     },
@@ -168,8 +189,9 @@ export default {
               let _this = this;
               setTimeout(function () {
                 _this.senddynamicshowchange(false);
-                _this.reloadchange();
-                _this.mydynamicshowchange(true);
+                _this.reloadchange();//思考怎么刷新此处页面
+                _this.mydynamicshowchange(true)
+                _this.uppage =  _this.uppage + 1;
                 console.log("接收到变化");
               }, 800);
             }
@@ -214,8 +236,8 @@ export default {
       //缓存请求
       if (localStorage.getExpire("mydynamictoken")) {
         console.log("存在");
-        this.mydynamic = localStorage.getExpire("mydynamictoken");
-        if (this.mydynamic.length == 0) {
+        this.mydynamiclist = localStorage.getExpire("mydynamictoken");
+        if (this.mydynamiclist.length == 0) {
           this.nodynamic = true;
         }
       } else {
@@ -227,10 +249,10 @@ export default {
             if (res.data == false) {
               this.nodynamic = true;
             } else {
-              this.mydynamic = res.data;
+              this.mydynamiclist = res.data;
             }
             //session为空数组时，也为true
-            localStorage.setExpire("mydynamictoken", this.mydynamic);
+            localStorage.setExpire("mydynamictoken", this.mydynamiclist);
           })
           .catch((error) => {
             console.log(error);
@@ -503,6 +525,13 @@ export default {
   width: 32px;
   height: 32px;
 }
+.user-info .el-button{
+      width: 32px;
+      height: 32px; 
+      position: absolute;
+      right: 11px;
+      top: -10px;
+    }
 </style>
 <style lang="stylus" scoped>
 .dynamic-container {
@@ -517,6 +546,16 @@ export default {
     display: flex;
     align-items: center;
     margin: 10px;
+    position: relative;
+    .point{
+    display: block;
+      width: 20px;
+      height: 20px;
+      background:url('~@/assets/userimg/point.png') no-repeat;
+      background-size:cover;
+      position: absolute;
+      right: 16px;
+    }
 
     span {
       margin-left: 10px;

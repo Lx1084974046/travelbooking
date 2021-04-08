@@ -9,6 +9,10 @@
   touch-action: manipulation;
   vertical-align: baseline;
 }
+i{
+  font-style: normal;
+  font-size: 12px;
+}
 
 #app {
   height: 100vh;
