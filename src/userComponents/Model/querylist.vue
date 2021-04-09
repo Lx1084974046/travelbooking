@@ -183,6 +183,7 @@ export default {
         this.ondate = new Date(this.ondate).setDate(
           new Date(this.ondate).getDate() - 1
         );
+        //toLocaleDateString()月日 toLocaleTimeString()时间 toLocaleString()YMDhms
         let param1 = {
           date: new Date(this.ondate).toLocaleDateString(),
           route1: this.route1,

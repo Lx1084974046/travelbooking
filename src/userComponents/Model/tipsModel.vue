@@ -39,7 +39,7 @@ export default {
       "cabinnum",
       "oldnum",
       "newnum",
-      'dynum'
+      "dynum",
     ]),
   },
   watch: {},
@@ -54,12 +54,14 @@ export default {
       "reloadchange",
       "queryshowchange",
       "senddynamicshowchange",
+      "mydynamicshowchange",
     ]),
-    closeDialog() {//执行关闭弹窗并处理相关操作
+    closeDialog() {
+      //执行关闭弹窗并处理相关操作
       store.commit("dialogshowchange", false);
       if (this.dialogbutton == "登录") {
         this.$router.push({ path: "/userHome/me/login" });
-      }//注销
+      } //注销
       if (this.dialogbutton == "确认" && this.$route.name == "person") {
         localStorage.removeItem("logintoken");
         localStorage.removeItem("usertoken");
@@ -68,13 +70,15 @@ export default {
         this.$router.push({ path: "/userHome/me/nologin" });
       }
       //删除动态
-      if(this.dialogbutton == "删除" && this.$route.name == "person"){
-        delDynamic({img: this.dynum}).then(res => {
-          if(res.data == true){
-             localStorage.removeItem("mydynamictoken");
-            this.senddynamicshowchange(false);
-          }
-        }).catch()
+      if (this.dialogbutton == "删除" && this.$route.name == "person") {
+        delDynamic({ img: this.dynum })
+          .then((res) => {
+            if (res.data == true) {
+              localStorage.removeItem("mydynamictoken");
+              this.reloadchange();
+            }
+          })
+          .catch();
       }
       if (!this.bookshow && this.$route.name == "homeScreen") {
         store.commit("queryshowchange", false);
