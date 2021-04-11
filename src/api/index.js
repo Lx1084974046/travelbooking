@@ -50,3 +50,7 @@ export const findDynamic = params =>
 //删除动态
 export const delDynamic = params =>
     deletes('/delDynamic',params)
+
+//查询动态社区信息
+export const dynamicCommunity = params =>
+    get('/dynamicCommunity',params)

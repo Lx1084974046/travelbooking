@@ -63,7 +63,7 @@
                   Date.parse(item.time.substr(0, 10)) ==
                 24 * 60 * 60 * 1000
               ? "昨天 " + item.time.substr(11, 8)
-              : item.time
+              : item.time.substr(0,4) == new Date().toLocaleDateString("zh",{year: "numeric"}).substr(0,4) ? item.time.substr(5, 11) :  item.time
           }}</span>
         </div>
       </div>
