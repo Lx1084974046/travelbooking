@@ -8,7 +8,7 @@
           <img
             class="dyavatar"
             :src="
-              'http://10.1.3.193:3000/public/src/img/avatars/' +
+              'http://localhost:3000/public/src/img/avatars/' +
               item.user_avatar +
               '.png'
             "
@@ -21,10 +21,10 @@
         <span class="text">{{ item.text }}</span>
         <el-image
           :src="
-            'http://10.1.3.193:3000/public/src/img/dynamic/' + item.img + '.png'
+            'http://localhost:3000/public/src/img/dynamic/' + item.img + '.png'
           "
           :preview-src-list="[
-            'http://10.1.3.193:3000/public/src/img/dynamic/' +
+            'http://localhost:3000/public/src/img/dynamic/' +
               item.img +
               '.png',
           ]"

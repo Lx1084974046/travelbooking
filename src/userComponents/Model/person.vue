@@ -102,7 +102,7 @@ export default {
                 this.nickname = res.data[0].user_nickname;
               }
               this.avatar =
-                "http://10.1.3.193:3000/public/src/img/avatars/" +
+                "http://localhost:3000/public/src/img/avatars/" +
                 res.data[0].user_avatar +
                 ".png";
             }) //访问 localhost 的 net::ERR_UNKNOWN_URL_SCHEME 问题 解决方案是在 localhost 前面加上协议名：http://
@@ -128,7 +128,7 @@ export default {
             this.nickname = userInfo.user_nickname;
           }
           this.avatar =
-            "http://10.1.3.193:3000/public/src/img/avatars/" +
+            "http://localhost:3000/public/src/img/avatars/" +
             userInfo.user_avatar +
             ".png";
         }
