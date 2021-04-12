@@ -5,9 +5,15 @@ import routes from "./routes";
 
 Vue.use(VueRouter);
 
+const routerReplace = VueRouter.prototype.replace;
+VueRouter.prototype.replace = function replace(location) {
+  return routerReplace.call(this, location).catch(error => error);
+  };
+
 const router = new VueRouter({
   routes,
 });
+
 
 router.beforeEach((to, from, next) => {
   if (to.path.search("home") != -1) {     //导航top显示

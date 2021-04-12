@@ -18,7 +18,12 @@
           ></div>
         </div>
         <div class="text1" style="margin-top: 20px">
-          <input type="file" id="change" accept="image" @change="change" />
+          <input
+            type="file"
+            id="change"
+            accept="image/gif,image/jpeg,image/jpg,image/png"
+            @change="change"
+          />
           <label for="change"></label>
         </div>
         <el-button

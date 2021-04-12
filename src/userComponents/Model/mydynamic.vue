@@ -34,9 +34,15 @@
           </div>
           <span class="text">{{ item.text }}</span>
           <el-image
-            :src="'http://localhost:3000/public/src/img/dynamic/' + item.img"
+            :src="
+              'http://10.1.3.193:3000/public/src/img/dynamic/' +
+              item.img +
+              '.png'
+            "
             :preview-src-list="[
-              'http://localhost:3000/public/src/img/dynamic/' + item.img,
+              'http://10.1.3.193:3000/public/src/img/dynamic/' +
+                item.img +
+                '.png',
             ]"
             lazy
           >
@@ -63,7 +69,12 @@
                   Date.parse(item.time.substr(0, 10)) ==
                 24 * 60 * 60 * 1000
               ? "昨天 " + item.time.substr(11, 8)
-              : item.time.substr(0,4) == new Date().toLocaleDateString("zh",{year: "numeric"}).substr(0,4) ? item.time.substr(5, 11) :  item.time
+              : item.time.substr(0, 4) ==
+                new Date()
+                  .toLocaleDateString("zh", { year: "numeric" })
+                  .substr(0, 4)
+              ? item.time.substr(5, 11)
+              : item.time
           }}</span>
         </div>
       </div>
@@ -81,11 +92,17 @@
         </el-input>
         <div class="upimg">
           <i class="del" v-if="url" @click="clearFile"></i>
-          <input type="file" @change="change" ref="clearFile" />
-          <i class="up"></i>
+          <i class="up" v-else></i>
+          <input
+            type="file"
+            accept="image/gif,image/jpeg,image/jpg,image/png"
+            @change="change"
+            ref="clearFile"
+          />
           <el-image v-if="url" :src="url" :preview-src-list="srcList">
           </el-image>
         </div>
+
         <el-button type="success" @click="send">发表</el-button>
       </div>
     </transition>
@@ -186,6 +203,7 @@ export default {
                 duration: 1000,
               });
               localStorage.removeItem("mydynamictoken");
+              localStorage.removeItem("communitytoken");
               this.senddynamicshowchange(false);
               this.reloadchange(); //刷新页面
               //   this.$nextTick(() => {  页面dom变化后执行
@@ -218,6 +236,15 @@ export default {
     change(e) {
       let files = e.target.files || e.dataTransfer.files;
       if (!files.length) return;
+      if (files[0].size > 3 * 1024 * 1024) {
+        this.$message({
+          message: "文件大小不能大于6M",
+          type: "warning",
+          offset: 60,
+          duration: 1000,
+        });
+        return;
+      }
       this.picValue = files[0];
       this.url = this.getObjectURL(this.picValue);
       //每次替换图片要重新得到新的url
@@ -300,15 +327,14 @@ export default {
 .upimg {
   margin-top: 10px;
   width: 128px;
-  height: 128px;
   position: relative;
   margin-bottom: 20px;
 }
 .senddynamic .upimg .del {
   display: block;
   position: absolute;
-  right: -28px;
-  top: -28px;
+  right: -12px;
+  top: -12px;
   width: 26px;
   height: 26px;
   z-index: 99;
@@ -318,21 +344,26 @@ export default {
 .senddynamic .upimg .up {
   display: block;
   width: 100%;
-  height: 100%;
+  height: 128px;
   background: url("../../assets/userimg/upload.png") no-repeat;
 }
 .upimg input {
   width: 100%;
-  height: 100%;
+  height: 128px;
   position: absolute;
+  top: 0;
   opacity: 0;
 }
 .upimg .el-image {
-  width: 160px;
-  height: 160px;
-  position: absolute;
-  top: -16px;
-  left: -16px;
+  max-width: 200%;
+  max-height: 200px;
+  min-width: 100%;
+  min-height: 100px;
+  width: auto;
+  height: auto;
+}
+.senddynamic .el-button {
+  width: 80% !important;
 }
 .mydynamic {
   justify-content: center;
@@ -399,10 +430,9 @@ export default {
   top: 1px;
 }
 </style>
-<style lang="stylus" scoped>
+<style lang="stylus">
 .dynamic-container {
   width: 95%;
-  height: 25vh;
   background-color: #fff;
   margin: 10px 0;
   padding-top: 1px; // 避免边距塌陷
@@ -438,9 +468,16 @@ export default {
   }
 
   .el-image {
-    width: 100px;
-    height: 100px;
-    margin-left: 30px;
+    margin-left: 20px;
+
+    img {
+      max-width: 200%;
+      max-height: 200px;
+      min-width: 100%;
+      min-height: 100px;
+      width: auto;
+      height: auto;
+    }
   }
 
   .dytime {

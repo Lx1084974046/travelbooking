@@ -75,6 +75,7 @@ export default {
           .then((res) => {
             if (res.data == true) {
               localStorage.removeItem("mydynamictoken");
+              localStorage.removeItem("communitytoken");
               this.reloadchange();
             }
           })
