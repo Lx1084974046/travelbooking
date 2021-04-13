@@ -1,73 +1,89 @@
 <template>
   <div class="app">
-    <div class="no-dy-list" v-if="nodynamic"></div>
+    <div class="no-dy-list" v-if="nodynamic">
+      <el-tag>暂无数据</el-tag>
+    </div>
     <div class="dynamic-list" v-else>
-      <div class="dynamic-container" v-for="(item, index) in list" :key="index">
-        <!-- v-for里面无法获取到data数据，需绑定传入，注意传入后的使用方式 -->
-        <div class="user-info">
-          <img
-            class="dyavatar"
+      <mescroll-vue ref="mescroll" :down="mescrollDown" @init="mescrollInit">
+        <div
+          class="dynamic-container"
+          v-for="(item, index) in list"
+          :key="index"
+        >
+          <!-- v-for里面无法获取到data数据，需绑定传入，注意传入后的使用方式 -->
+          <div class="user-info">
+            <img
+              class="dyavatar"
+              :src="
+                'http://localhost:3000/public/src/img/avatars/' +
+                item.user_avatar +
+                '.png'
+              "
+              alt=""
+            />
+            <span>{{
+              item.user_nickname == "0" ? item.user_Account : item.user_nickname
+            }}</span>
+          </div>
+          <span class="text">{{ item.text }}</span>
+          <el-image
             :src="
-              'http://localhost:3000/public/src/img/avatars/' +
-              item.user_avatar +
+              'http://localhost:3000/public/src/img/dynamic/' +
+              item.img +
               '.png'
             "
-            alt=""
-          />
-          <span>{{
-            item.user_nickname == "0" ? item.user_Account : item.user_nickname
+            :preview-src-list="[
+              'http://localhost:3000/public/src/img/dynamic/' +
+                item.img +
+                '.png',
+            ]"
+            lazy
+          >
+          </el-image>
+          <i class="give-nolike" v-if="nolike"></i>
+          <i class="give-like" v-else></i>
+          <span class="dytime">{{
+            item.time.substr(0, 10) ==
+            new Date()
+              .toLocaleDateString("zh", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+              })
+              .replace(/[/]/g, "-")
+              ? item.time.substr(11, 8)
+              : Date.parse(
+                  new Date()
+                    .toLocaleDateString("zh", {
+                      year: "numeric",
+                      month: "2-digit",
+                      day: "2-digit",
+                    })
+                    .replace(/[/]/g, "-")
+                ) -
+                  Date.parse(item.time.substr(0, 10)) ==
+                24 * 60 * 60 * 1000
+              ? "昨天 " + item.time.substr(11, 8)
+              : item.time.substr(0, 4) ==
+                new Date()
+                  .toLocaleDateString("zh", { year: "numeric" })
+                  .substr(0, 4)
+              ? item.time.substr(5, 11)
+              : item.time
           }}</span>
         </div>
-        <span class="text">{{ item.text }}</span>
-        <el-image
-          :src="
-            'http://localhost:3000/public/src/img/dynamic/' + item.img + '.png'
-          "
-          :preview-src-list="[
-            'http://localhost:3000/public/src/img/dynamic/' +
-              item.img +
-              '.png',
-          ]"
-          lazy
+        <el-button type="primary" @click="loading" v-if="loadshow"
+          >点击加载更多</el-button
         >
-        </el-image>
-        <i class="give-nolike" v-if="nolike"></i>
-        <i class="give-like" v-else></i>
-        <span class="dytime">{{
-          item.time.substr(0, 10) ==
-          new Date()
-            .toLocaleDateString("zh", {
-              year: "numeric",
-              month: "2-digit",
-              day: "2-digit",
-            })
-            .replace(/[/]/g, "-")
-            ? item.time.substr(11, 8)
-            : Date.parse(
-                new Date()
-                  .toLocaleDateString("zh", {
-                    year: "numeric",
-                    month: "2-digit",
-                    day: "2-digit",
-                  })
-                  .replace(/[/]/g, "-")
-              ) -
-                Date.parse(item.time.substr(0, 10)) ==
-              24 * 60 * 60 * 1000
-            ? "昨天 " + item.time.substr(11, 8)
-            : item.time.substr(0, 4) ==
-              new Date()
-                .toLocaleDateString("zh", { year: "numeric" })
-                .substr(0, 4)
-            ? item.time.substr(5, 11)
-            : item.time
-        }}</span>
-      </div>
+        <span class="load-bottom" v-else>人家是有底线的～</span>
+      </mescroll-vue>
     </div>
   </div>
 </template>
 
 <script>
+import { mapState, mapMutations } from "vuex";
+import MescrollVue from "mescroll.js/mescroll.vue";
 import { dynamicCommunity } from "@/api/index.js";
 export default {
   name: "",
@@ -77,28 +93,176 @@ export default {
       nodynamic: false,
       deldybtnshow: null,
       nolike: true,
+      loadshow: true,
+      mescroll: null, // mescroll实例对象
+      mescrollDown: {
+        use: true, // 是否启用下拉刷新; 默认true
+        auto: false, // 是否在初始化完毕之后自动执行下拉刷新的回调; 默认true
+        callback: this.downCallback,
+      }, //下拉刷新的配置. (如果下拉刷新和上拉加载处理的逻辑是一样的,则mescrollDown可不用写了)
+      // mescrollUp: {
+      //   // 上拉加载的配置.
+      //   use: true, // 是否启用上拉加载; 默认true
+      //   auto: false, // 是否在初始化完毕之后自动执行上拉加载的回调; 默认true
+      //   offset: -12,
+      //   callback: this.upCallback,
+      // },
     };
   },
-  computed: {},
+  components: {
+    MescrollVue,
+  },
+  computed: {
+    ...mapState(["dynumlength"]),
+  },
   watch: {},
   methods: {
+    ...mapMutations(["dynumlengthchange"]),
+    mescrollInit(mescroll) {
+      this.mescroll = mescroll; // 如果this.mescroll对象没有使用到,则mescrollInit可以不用配置
+    },
+    //下拉刷新
+    downCallback(mescroll) {
+      localStorage.removeItem("communitydytoken");
+      this.loadshow = true;
+      dynamicCommunity()
+        .then((res) => {
+          if (res.data == false) {
+            this.nodynamic = true;
+            localStorage.setExpire("communitytoken", this.list);
+            this.dynumlengthchange(0);
+          } else {
+            this.list = res.data.slice(0, 8);
+            localStorage.setExpire("communitytoken", res.data);
+            if (res.data.length < 8) {
+              this.dynumlengthchange(res.data.length);
+            } else {
+              this.dynumlengthchange(8);
+            }
+            console.log(this.dynumlength);
+          }
+          mescroll.endSuccess();
+          this.$message({
+            message: "刷新成功",
+            type: "success",
+            duration: 800,
+            offset: 60,
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    loading() {
+      switch (
+        localStorage.getExpire("communitytoken").length - this.dynumlength
+      ) {
+        case 0:
+          console.log("人家是有底线的");
+          this.loadshow = false;
+          break;
+        case 1:
+          this.list.push(
+            localStorage.getExpire("communitytoken")[this.dynumlength]
+          );
+          this.dynumlengthchange(this.dynumlength + 1);
+          break;
+        case 2:
+          this.list.push(
+            localStorage.getExpire("communitytoken")[this.dynumlength],
+            localStorage.getExpire("communitytoken")[this.dynumlength + 1]
+          );
+          this.dynumlengthchange(this.dynumlength + 2);
+          break;
+        case 3:
+          this.list.push(
+            localStorage.getExpire("communitytoken")[this.dynumlength],
+            localStorage.getExpire("communitytoken")[this.dynumlength + 1],
+            localStorage.getExpire("communitytoken")[this.dynumlength + 2]
+          );
+          this.dynumlengthchange(this.dynumlength + 3);
+          break;
+        case 4:
+          this.list.push(
+            localStorage.getExpire("communitytoken")[this.dynumlength],
+            localStorage.getExpire("communitytoken")[this.dynumlength + 1],
+            localStorage.getExpire("communitytoken")[this.dynumlength + 2],
+            localStorage.getExpire("communitytoken")[this.dynumlength + 3]
+          );
+          this.dynumlengthchange(this.dynumlength + 4);
+          break;
+        case 5:
+          this.list.push(
+            localStorage.getExpire("communitytoken")[this.dynumlength],
+            localStorage.getExpire("communitytoken")[this.dynumlength + 1],
+            localStorage.getExpire("communitytoken")[this.dynumlength + 2],
+            localStorage.getExpire("communitytoken")[this.dynumlength + 3],
+            localStorage.getExpire("communitytoken")[this.dynumlength + 4]
+          );
+          this.dynumlengthchange(this.dynumlength + 5);
+          break;
+        case 6:
+          this.list.push(
+            localStorage.getExpire("communitytoken")[this.dynumlength],
+            localStorage.getExpire("communitytoken")[this.dynumlength + 1],
+            localStorage.getExpire("communitytoken")[this.dynumlength + 2],
+            localStorage.getExpire("communitytoken")[this.dynumlength + 3],
+            localStorage.getExpire("communitytoken")[this.dynumlength + 4],
+            localStorage.getExpire("communitytoken")[this.dynumlength + 5]
+          );
+          this.dynumlengthchange(this.dynumlength + 6);
+          break;
+        case 7:
+          this.list.push(
+            localStorage.getExpire("communitytoken")[this.dynumlength],
+            localStorage.getExpire("communitytoken")[this.dynumlength + 1],
+            localStorage.getExpire("communitytoken")[this.dynumlength + 2],
+            localStorage.getExpire("communitytoken")[this.dynumlength + 3],
+            localStorage.getExpire("communitytoken")[this.dynumlength + 4],
+            localStorage.getExpire("communitytoken")[this.dynumlength + 5],
+            localStorage.getExpire("communitytoken")[this.dynumlength + 6]
+          );
+          this.dynumlengthchange(this.dynumlength + 7);
+          break;
+        default:
+          this.list.push(
+            localStorage.getExpire("communitytoken")[this.dynumlength],
+            localStorage.getExpire("communitytoken")[this.dynumlength + 1],
+            localStorage.getExpire("communitytoken")[this.dynumlength + 2],
+            localStorage.getExpire("communitytoken")[this.dynumlength + 3],
+            localStorage.getExpire("communitytoken")[this.dynumlength + 4],
+            localStorage.getExpire("communitytoken")[this.dynumlength + 5],
+            localStorage.getExpire("communitytoken")[this.dynumlength + 6],
+            localStorage.getExpire("communitytoken")[this.dynumlength + 7]
+          );
+          this.dynumlengthchange(this.dynumlength + 8);
+      }
+    },
     goCommunity() {
       if (localStorage.getExpire("communitytoken")) {
         console.log("存在");
-        this.list = localStorage.getExpire("communitytoken");
-        if (this.list.length == 0) {
-          this.nodynamic = true;
-        }
+        this.list = localStorage
+          .getExpire("communitytoken")
+          .slice(0, this.dynumlength);
+        console.log(this.dynumlength);
       } else {
         console.log("不存在");
         dynamicCommunity()
           .then((res) => {
             if (res.data == false) {
               this.nodynamic = true;
+              localStorage.setExpire("communitytoken", this.list);
+              this.dynumlengthchange(0);
             } else {
-              this.list = res.data;
+              this.list = res.data.slice(0, 8);
+              localStorage.setExpire("communitytoken", res.data);
+              if (res.data.length < 8) {
+                this.dynumlengthchange(res.data.length);
+              } else {
+                this.dynumlengthchange(8);
+              }
+              console.log(this.dynumlength);
             }
-            localStorage.setExpire("communitytoken", this.list);
           })
           .catch((error) => {
             console.log(error);
@@ -116,14 +280,16 @@ export default {
 .app {
   width: 100%;
   height: 100%;
-  background: yellow;
   position: fixed;
-  margin-top: 50px;
+  margin-top: 6.8vh;
 }
 
 .no-dy-list {
   height: 85vh;
-  background-color: aqua;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 .dynamic-list {
   width: 100%;
@@ -138,6 +304,10 @@ export default {
   width: 32px;
   height: 32px;
 }
+.dynamic-list .load-bottom {
+  color: #a8a8a8;
+  margin-bottom: 12px;
+}
 .user-info .el-button {
   width: 32px;
   height: 32px;
@@ -147,6 +317,10 @@ export default {
 }
 </style>
 <style lang="stylus">
+.dynamic-list .el-button {
+  margin-bottom: 8px;
+}
+
 .dynamic-container {
   width: 95%;
   background-color: #fff;
@@ -211,6 +385,21 @@ export default {
     bottom: 12px;
     color: #A9A9A9;
   }
+}
+
+.mescroll {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  height: auto;
+  -webkit-overflow-scrolling: touch;
+  height: 85vh;
+}
+
+.mescroll > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 </style>
 
