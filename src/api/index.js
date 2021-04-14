@@ -54,3 +54,7 @@ export const delDynamic = params =>
 //查询动态社区信息
 export const dynamicCommunity = params =>
     get('/dynamicCommunity',params)
+
+//点赞取消点赞
+export const likeDynamic = params =>
+    post('/likeDynamic',params)

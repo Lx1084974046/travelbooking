@@ -40,8 +40,15 @@
             lazy
           >
           </el-image>
-          <i class="give-nolike" v-if="nolike"></i>
-          <i class="give-like" v-else></i>
+          <i class="give-nolike" @click="givelike(index)" v-if="!item.like"></i>
+          <i class="give-like" @click="givenolike(index)" v-else></i>
+          <span class="like-num">{{
+            item.num == 0
+              ? ""
+              : item.num > 99
+              ? "99+"
+              : item.num + "\xa0\xa0\xa0"
+          }}</span>
           <span class="dytime">{{
             item.time.substr(0, 10) ==
             new Date()
@@ -84,7 +91,7 @@
 <script>
 import { mapState, mapMutations } from "vuex";
 import MescrollVue from "mescroll.js/mescroll.vue";
-import { dynamicCommunity } from "@/api/index.js";
+import { dynamicCommunity, likeDynamic } from "@/api/index.js";
 export default {
   name: "",
   data() {
@@ -92,7 +99,6 @@ export default {
       list: [],
       nodynamic: false,
       deldybtnshow: null,
-      nolike: true,
       loadshow: true,
       mescroll: null, // mescroll实例对象
       mescrollDown: {
@@ -117,41 +123,127 @@ export default {
   },
   watch: {},
   methods: {
-    ...mapMutations(["dynumlengthchange"]),
+    ...mapMutations([
+      "dynumlengthchange",
+      "dialogshowchange",
+      "dialogtitlechange",
+      "dialogcontentchange",
+      "dialogreturnsbuttonchange",
+    ]),
     mescrollInit(mescroll) {
       this.mescroll = mescroll; // 如果this.mescroll对象没有使用到,则mescrollInit可以不用配置
+    },
+    givelike(index) {
+      console.log("zan");
+      if (localStorage.getExpire("usertoken")) {
+        let params = {
+          account: localStorage.getExpire("usertoken").user_Account,
+          img: this.list[index].img,
+          num: 1,
+        };
+        likeDynamic(params)
+          .then((res) => {
+            if (res.data == true) {
+              this.list[index].like = true;
+              this.list[index].num = this.list[index].num + 1;
+              localStorage.removeItem("communitytoken");
+              this.goCommunity();
+            }
+          })
+          .catch();
+      } else {
+        this.dialogtitlechange("不能点赞");
+        this.dialogcontentchange("请先登录!");
+        this.dialogreturnsbuttonchange(true);
+        this.dialogshowchange(true);
+      }
+    },
+    givenolike(index) {
+      console.log("nozan");
+      let params = {
+        account: localStorage.getExpire("usertoken").user_Account,
+        img: this.list[index].img,
+        num: 2,
+      };
+      likeDynamic(params)
+        .then((res) => {
+          if (res.data == true) {
+            this.list[index].like = false;
+            this.list[index].num = this.list[index].num - 1;
+            localStorage.removeItem("communitytoken");
+            this.goCommunity();
+          }
+        })
+        .catch();
     },
     //下拉刷新
     downCallback(mescroll) {
       localStorage.removeItem("communitydytoken");
       this.loadshow = true;
-      dynamicCommunity()
-        .then((res) => {
-          if (res.data == false) {
-            this.nodynamic = true;
-            localStorage.setExpire("communitytoken", this.list);
-            this.dynumlengthchange(0);
-          } else {
-            this.list = res.data.slice(0, 8);
-            localStorage.setExpire("communitytoken", res.data);
-            if (res.data.length < 8) {
-              this.dynumlengthchange(res.data.length);
-            } else {
-              this.dynumlengthchange(8);
-            }
-            console.log(this.dynumlength);
-          }
-          mescroll.endSuccess();
-          this.$message({
-            message: "刷新成功",
-            type: "success",
-            duration: 800,
-            offset: 60,
-          });
+      // 登录时刷新
+      if (localStorage.getExpire("usertoken")) {
+        dynamicCommunity({
+          account: localStorage.getExpire("usertoken").user_Account,
         })
-        .catch((error) => {
-          console.log(error);
-        });
+          .then((res) => {
+            if (res.data == false) {
+              this.nodynamic = true;
+              localStorage.setExpire("communitytoken", this.list);
+              this.dynumlengthchange(0);
+            } else {
+              this.list = res.data.slice(0, 8);
+              localStorage.setExpire("communitytoken", res.data);
+              if (res.data.length < 8) {
+                this.dynumlengthchange(res.data.length);
+              } else {
+                this.dynumlengthchange(8);
+              }
+              console.log(this.dynumlength);
+            }
+            mescroll.endSuccess();
+            this.$message({
+              message: "刷新成功",
+              type: "success",
+              duration: 800,
+              offset: 60,
+            });
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      } else {
+        //未登录
+        console.log("nol");
+        dynamicCommunity({
+          account: null,
+        })
+          .then((res) => {
+            if (res.data == false) {
+              this.nodynamic = true;
+              localStorage.setExpire("communitytoken", this.list);
+              this.dynumlengthchange(0);
+            } else {
+              this.list = res.data.slice(0, 8);
+              localStorage.setExpire("communitytoken", res.data);
+              if (res.data.length < 8) {
+                this.dynumlengthchange(res.data.length);
+              } else {
+                this.dynumlengthchange(8);
+              }
+              console.log(this.dynumlength);
+            }
+            mescroll.endSuccess();
+            this.$message({
+              message: "刷新成功",
+              type: "success",
+              duration: 800,
+              offset: 60,
+            });
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
     },
     loading() {
       switch (
@@ -246,27 +338,55 @@ export default {
           .slice(0, this.dynumlength);
         console.log(this.dynumlength);
       } else {
-        console.log("不存在");
-        dynamicCommunity()
-          .then((res) => {
-            if (res.data == false) {
-              this.nodynamic = true;
-              localStorage.setExpire("communitytoken", this.list);
-              this.dynumlengthchange(0);
-            } else {
-              this.list = res.data.slice(0, 8);
-              localStorage.setExpire("communitytoken", res.data);
-              if (res.data.length < 8) {
-                this.dynumlengthchange(res.data.length);
-              } else {
-                this.dynumlengthchange(8);
-              }
-              console.log(this.dynumlength);
-            }
+        if (localStorage.getExpire("usertoken")) {
+          console.log("不存在已登录");
+          dynamicCommunity({
+            account: localStorage.getExpire("usertoken").user_Account,
           })
-          .catch((error) => {
-            console.log(error);
-          });
+            .then((res) => {
+              if (res.data == false) {
+                this.nodynamic = true;
+                localStorage.setExpire("communitytoken", this.list);
+                this.dynumlengthchange(0);
+              } else {
+                this.list = res.data.slice(0, 8);
+                localStorage.setExpire("communitytoken", res.data);
+                if (res.data.length < 8) {
+                  this.dynumlengthchange(res.data.length);
+                } else {
+                  this.dynumlengthchange(8);
+                }
+                console.log(this.dynumlength);
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        } else {
+          console.log("不存在未登录");
+          dynamicCommunity({
+            account: null,
+          })
+            .then((res) => {
+              if (res.data == false) {
+                this.nodynamic = true;
+                localStorage.setExpire("communitytoken", this.list);
+                this.dynumlengthchange(0);
+              } else {
+                this.list = res.data.slice(0, 8);
+                localStorage.setExpire("communitytoken", res.data);
+                if (res.data.length < 8) {
+                  this.dynumlengthchange(res.data.length);
+                } else {
+                  this.dynumlengthchange(8);
+                }
+                console.log(this.dynumlength);
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        }
       }
     },
   },
@@ -365,8 +485,9 @@ export default {
     height: 22px;
     display: block;
     position: absolute;
-    right: 26px;
+    right: 42px;
     bottom: 13px;
+    z-index: 99;
   }
 
   .give-like {
@@ -377,6 +498,14 @@ export default {
   .give-nolike {
     background: url('~@/assets/dynamic/nolike.png') no-repeat;
     background-size: cover;
+  }
+
+  .like-num {
+    position: absolute;
+    right: 8px;
+    bottom: 12px;
+    font-size: 16px;
+    color: #409EFF;
   }
 
   .dytime {

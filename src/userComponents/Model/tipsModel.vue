@@ -67,6 +67,7 @@ export default {
         localStorage.removeItem("usertoken");
         localStorage.removeItem("userorderlisttoken");
         localStorage.removeItem("mydynamictoken");
+        localStorage.removeItem("communitytoken");
         this.$router.push({ path: "/userHome/me/nologin" });
       }
       //删除动态

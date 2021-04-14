@@ -91,6 +91,7 @@ export default {
                   "logintoken",
                   JSON.parse(res.config.data).account
                 );
+                localStorage.removeItem("communitytoken");
                 this.$router.push({ path: "/userHome/me/person" });
               } else {
                 this.dialogtitlechange("登录失败");

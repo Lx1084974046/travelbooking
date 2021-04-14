@@ -1,8 +1,8 @@
 <template>
   <div class="block">
     <el-carousel arrow="never" height="95px">
-      <el-carousel-item v-for="item in 4" :key="item">
-        <h3 class="small">{{ item }}</h3>
+      <el-carousel-item v-for="(item, index) in imgList" :key="index">
+        <img :src="item" alt="" />
       </el-carousel-item>
     </el-carousel>
   </div>
@@ -11,7 +11,14 @@
 <script>
 export default {
   data() {
-    return {};
+    return {
+      imgList: [
+        require("../../assets/img/01.jpeg"),
+        require("../../assets/img/02.jpeg"),
+        require("../../assets/img/03.jpeg"),
+        require("../../assets/img/04.jpeg"),
+      ],
+    };
   },
   computed: {},
   watch: {},
@@ -41,5 +48,10 @@ export default {
 
 .el-carousel__item:nth-child(2n + 1) {
   background-color: #d3dce6;
+}
+.block img {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 </style>
