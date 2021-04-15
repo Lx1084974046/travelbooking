@@ -28,9 +28,18 @@
               alt=""
             />
             <!-- vue中图片在本地，路径是动态请求过来的，拼接图片路径必须要用require -->
-            <span>{{ item.flightNum }}</span>
+            <span class="flightNum">{{ item.flightNum }}</span>
             <span>{{ item.type }}型机</span>
-            <span>余票：{{ item.poll }}</span>
+            <span
+              :style="
+                item.poll > 60
+                  ? 'color:#00ff00'
+                  : item.poll > 30
+                  ? 'color:#ffa500'
+                  : 'color:#F56C6C'
+              "
+              >余票：{{ item.poll }}</span
+            >
           </div>
           <div class="price">
             <span>¥{{ item.price }}</span>
@@ -409,6 +418,9 @@ export default {
   margin-top: 8px;
   margin-left: 20px;
   margin-bottom: 6px;
+}
+.bottom-info .flightNum {
+  width: 56px;
 }
 .bottom-info span {
   margin-left: 12px;

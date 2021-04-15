@@ -1,5 +1,5 @@
 <template>
-  <div class="app">
+  <div class="app-d">
     <div class="no-dy-list" v-if="nodynamic">
       <el-tag>暂无数据</el-tag>
     </div>
@@ -30,25 +30,28 @@
             :src="
               'http://localhost:3000/public/src/img/dynamic/' +
               item.img +
-              '.png'
+              '.jpeg'
             "
             :preview-src-list="[
               'http://localhost:3000/public/src/img/dynamic/' +
                 item.img +
-                '.png',
+                '.jpeg',
             ]"
             lazy
           >
           </el-image>
-          <i class="give-nolike" @click="givelike(index)" v-if="!item.like"></i>
-          <i class="give-like" @click="givenolike(index)" v-else></i>
-          <span class="like-num">{{
-            item.num == 0
-              ? ""
-              : item.num > 99
-              ? "99+"
-              : item.num + "\xa0\xa0\xa0"
-          }}</span>
+          <div class="like-container">
+            <i
+              class="give-nolike"
+              @click="givelike(index)"
+              v-if="!item.like"
+            ></i>
+            <i class="give-like" @click="givenolike(index)" v-else></i>
+            <span class="like-num">{{
+              item.num == 0 ? "" : item.num > 99 ? "99+" : item.num
+            }}</span>
+          </div>
+
           <span class="dytime">{{
             item.time.substr(0, 10) ==
             new Date()
@@ -146,6 +149,7 @@ export default {
             if (res.data == true) {
               this.list[index].like = true;
               this.list[index].num = this.list[index].num + 1;
+              localStorage.removeItem("mydynamictoken");
               localStorage.removeItem("communitytoken");
               this.goCommunity();
             }
@@ -170,6 +174,7 @@ export default {
           if (res.data == true) {
             this.list[index].like = false;
             this.list[index].num = this.list[index].num - 1;
+            localStorage.removeItem("mydynamictoken");
             localStorage.removeItem("communitytoken");
             this.goCommunity();
           }
@@ -397,7 +402,7 @@ export default {
 </script>
 
 <style scoped>
-.app {
+.app-d {
   width: 100%;
   height: 100%;
   position: fixed;
@@ -437,98 +442,105 @@ export default {
 }
 </style>
 <style lang="stylus">
-.dynamic-list .el-button {
-  margin-bottom: 8px;
-}
+.app-d {
+  .dynamic-list .el-button {
+    margin-bottom: 8px;
+  }
 
-.dynamic-container {
-  width: 95%;
-  background-color: #fff;
-  margin: 10px 0;
-  padding-top: 1px; // 避免边距塌陷
-  padding-bottom: 40px;
-  position: relative;
-
-  .user-info {
-    height: 36px;
-    display: flex;
-    align-items: center;
-    margin: 10px;
+  .dynamic-container {
+    width: 95%;
+    background-color: #fff;
+    margin: 10px 0;
+    padding-top: 1px; // 避免边距塌陷
+    padding-bottom: 40px;
     position: relative;
 
-    span {
-      margin-left: 10px;
+    .user-info {
+      height: 36px;
+      display: flex;
+      align-items: center;
+      margin: 10px;
+      position: relative;
+
+      span {
+        margin-left: 10px;
+      }
+    }
+
+    .text {
+      margin: 0 30px;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .el-image {
+      margin-left: 20px;
+
+      img {
+        max-width: 200%;
+        max-height: 200px;
+        min-width: 100%;
+        min-height: 100px;
+        width: auto;
+        height: auto;
+      }
+    }
+
+    .like-container {
+      position: absolute;
+      right: 2px;
+      bottom: 13px;
+      z-index: 99;
+      display: flex;
+      align-items: center;
+
+      .give-like, .give-nolike {
+        width: 22px;
+        height: 22px;
+        display: block;
+      }
+
+      .give-like {
+        background: url('~@/assets/dynamic/like.png') no-repeat;
+        background-size: cover;
+      }
+
+      .give-nolike {
+        background: url('~@/assets/dynamic/nolike.png') no-repeat;
+        background-size: cover;
+      }
+
+      .like-num {
+        display: block;
+        width: 36px;
+        font-size: 16px;
+        color: #409EFF;
+        margin-left: 3px;
+      }
+    }
+
+    .dytime {
+      position: absolute;
+      left: 20px;
+      bottom: 12px;
+      color: #A9A9A9;
     }
   }
 
-  .text {
-    margin: 0 30px;
-    display: block;
-    margin-bottom: 6px;
-  }
-
-  .el-image {
-    margin-left: 20px;
-
-    img {
-      max-width: 200%;
-      max-height: 200px;
-      min-width: 100%;
-      min-height: 100px;
-      width: auto;
-      height: auto;
-    }
-  }
-
-  .give-like, .give-nolike {
-    width: 22px;
-    height: 22px;
-    display: block;
+  .mescroll {
     position: absolute;
-    right: 42px;
-    bottom: 13px;
-    z-index: 99;
+    top: 0;
+    bottom: 0;
+    height: auto;
+    -webkit-overflow-scrolling: touch;
+    height: 85vh;
   }
 
-  .give-like {
-    background: url('~@/assets/dynamic/like.png') no-repeat;
-    background-size: cover;
+  .mescroll > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
-
-  .give-nolike {
-    background: url('~@/assets/dynamic/nolike.png') no-repeat;
-    background-size: cover;
-  }
-
-  .like-num {
-    position: absolute;
-    right: 8px;
-    bottom: 12px;
-    font-size: 16px;
-    color: #409EFF;
-  }
-
-  .dytime {
-    position: absolute;
-    left: 20px;
-    bottom: 12px;
-    color: #A9A9A9;
-  }
-}
-
-.mescroll {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  height: auto;
-  -webkit-overflow-scrolling: touch;
-  height: 85vh;
-}
-
-.mescroll > div {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }
 </style>
 

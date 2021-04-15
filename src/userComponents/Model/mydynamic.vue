@@ -37,12 +37,12 @@
             :src="
               'http://localhost:3000/public/src/img/dynamic/' +
               item.img +
-              '.png'
+              '.jpeg'
             "
             :preview-src-list="[
               'http://localhost:3000/public/src/img/dynamic/' +
                 item.img +
-                '.png',
+                '.jpeg',
             ]"
             lazy
           >
@@ -76,6 +76,12 @@
               ? item.time.substr(5, 11)
               : item.time
           }}</span>
+          <div class="like-num-container">
+            <i class="like-num"></i>
+            <span>{{
+              item.num == 0 ? "" : item.num > 99 ? "99+" : item.num
+            }}</span>
+          </div>
         </div>
       </div>
     </div>
@@ -236,7 +242,7 @@ export default {
     change(e) {
       let files = e.target.files || e.dataTransfer.files;
       if (!files.length) return;
-      if (files[0].size > 3 * 1024 * 1024) {
+      if (files[0].size > 6 * 1024 * 1024) {
         this.$message({
           message: "文件大小不能大于6M",
           type: "warning",
@@ -250,6 +256,7 @@ export default {
       //每次替换图片要重新得到新的url
       this.srcList.push(this.url);
       console.log(this.url);
+      //转码+压缩处理
       base64Img.base64Img(this.url).then((res) => {
         this.imgbase64 = res;
       });
@@ -431,60 +438,83 @@ export default {
 }
 </style>
 <style lang="stylus">
-.dynamic-container {
-  width: 95%;
-  background-color: #fff;
-  margin: 10px 0;
-  padding-top: 1px; // 避免边距塌陷
-  padding-bottom: 40px;
-  position: relative;
-
-  .user-info {
-    height: 36px;
-    display: flex;
-    align-items: center;
-    margin: 10px;
+.app-dynamic {
+  .dynamic-container {
+    width: 95%;
+    background-color: #fff;
+    margin: 10px 0;
+    padding-top: 1px; // 避免边距塌陷
+    padding-bottom: 40px;
     position: relative;
 
-    .point {
+    .user-info {
+      height: 36px;
+      display: flex;
+      align-items: center;
+      margin: 10px;
+      position: relative;
+
+      .point {
+        display: block;
+        width: 20px;
+        height: 20px;
+        background: url('~@/assets/userimg/point.png') no-repeat;
+        background-size: cover;
+        position: absolute;
+        right: 16px;
+      }
+
+      span {
+        margin-left: 10px;
+      }
+    }
+
+    .text {
+      margin: 0 30px;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .el-image {
+      margin-left: 20px;
+
+      img {
+        max-width: 200%;
+        max-height: 200px;
+        min-width: 100%;
+        min-height: 100px;
+        width: auto;
+        height: auto;
+      }
+    }
+
+    .dytime {
+      position: absolute;
+      right: 16px;
+      bottom: 12px;
+      color: #A9A9A9;
+    }
+  }
+
+  .like-num-container {
+    position: absolute;
+    left: 16px;
+    bottom: 10px;
+    display: flex;
+    align-items: center;
+
+    .like-num {
       display: block;
       width: 20px;
       height: 20px;
-      background: url('~@/assets/userimg/point.png') no-repeat;
+      background: url('~@/assets/dynamic/likenum.png') no-repeat;
       background-size: cover;
-      position: absolute;
-      right: 16px;
+      margin-right: 2px;
     }
 
     span {
-      margin-left: 10px;
+      color: #1296db;
     }
-  }
-
-  .text {
-    margin: 0 30px;
-    display: block;
-    margin-bottom: 6px;
-  }
-
-  .el-image {
-    margin-left: 20px;
-
-    img {
-      max-width: 200%;
-      max-height: 200px;
-      min-width: 100%;
-      min-height: 100px;
-      width: auto;
-      height: auto;
-    }
-  }
-
-  .dytime {
-    position: absolute;
-    right: 16px;
-    bottom: 12px;
-    color: #A9A9A9;
   }
 }
 </style>
