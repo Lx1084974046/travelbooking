@@ -2,9 +2,9 @@
   <div class="query-app">
     <div class="query-list">
       <div class="list-nav">
-        <span @click="right">&lt;前一天</span>
+        <span @click="left">&lt;前一天</span>
         <span>{{ this.ondate | dateFormat }}</span>
-        <span @click="left">后一天&gt;</span>
+        <span @click="right">后一天&gt;</span>
       </div>
       <div class="lists" v-if="listshow">
         <div
@@ -180,7 +180,7 @@ export default {
       this.reloadchange();
       console.log("接收到变化");
     },
-    right() {
+    left() {
       //Date.parse()将日期字符串转时间戳 若字符无法识别返回NaN
       if (this.ondate == Date.parse(this.currentdate)) {
         this.dialogshowchange(true);
@@ -218,38 +218,61 @@ export default {
           });
       }
     },
-    left() {
+    right() {
       //获取全局过滤器
       // let temp = Vue.filter("dateFormat");
       //temp(~)
       //setDate设置时间为所在月份的某一天 getDate获取时间所在月份的第几天
-      //过滤器moment插件是以国际时间为准,处理北京时间生成的时间戳是以北京时间08:00，因为北京时间比国际时间快8h
+      //过滤器moment插件是以国际时间为准,北京时间比国际时间快8h
       this.ondate = new Date(this.ondate).setDate(
         new Date(this.ondate).getDate() + 1
       );
-      let param2 = {
-        date: new Date(this.ondate).toLocaleDateString(),
-        route1: this.route1,
-        route2: this.route2,
-      };
-      console.log("qaaa");
-      queryList(param2)
-        .then((res) => {
-          console.log(res);
-          if (res.data != false) {
-            console.log(res.data);
-            localStorage.setExpire("querytoken", res.data);
-            this.handleUpdateClick();
-          } else {
-            this.dialogshowchange(true);
-            this.dialogtitlechange("暂无数据");
-            this.dialogcontentchange("航班暂无排班");
-            this.dialogreturnsbuttonchange(true);
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      console.log(Date.parse(new Date(this.ondate).toLocaleDateString()));
+      if (
+        Date.parse(new Date(this.ondate).toLocaleDateString()) >
+        Date.parse(
+          new Date(
+            new Date().setDate(new Date().getDate() + 4)
+          ).toLocaleDateString()
+        )
+      ) {
+        console.log(Date.parse(new Date(this.ondate).toLocaleDateString()));
+        console.log(
+          Date.parse(
+            new Date(
+              new Date().setDate(new Date().getDate() + 5)
+            ).toLocaleDateString()
+          )
+        );
+        this.dialogshowchange(true);
+        this.dialogtitlechange("暂无数据");
+        this.dialogcontentchange("只能查看五天内的航班");
+        this.dialogreturnsbuttonchange(true);
+      } else {
+        let param2 = {
+          date: new Date(this.ondate).toLocaleDateString(),
+          route1: this.route1,
+          route2: this.route2,
+        };
+        console.log("qaaa");
+        queryList(param2)
+          .then((res) => {
+            console.log(res);
+            if (res.data != false) {
+              console.log(res.data);
+              localStorage.setExpire("querytoken", res.data);
+              this.handleUpdateClick();
+            } else {
+              this.dialogshowchange(true);
+              this.dialogtitlechange("暂无数据");
+              this.dialogcontentchange("航班暂无排班");
+              this.dialogreturnsbuttonchange(true);
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
     },
     order() {
       if (localStorage.getExpire("logintoken")) {

@@ -52,5 +52,23 @@ export default [
         ],
       },
     ],
+  },
+  {
+    path: '/admin',
+    name: 'admin',
+    redirect: "/admin/login",
+    component: ()=> import('../adminView/administrator'),
+    children: [
+      {
+        path: 'login',
+        name: 'login',
+        component: ()=> import('../adminComponents/login')
+      },
+      {
+        path: 'manage',
+        name: 'manage',
+        component: ()=> import('../adminComponents/manage')
+      }
+    ]
   }
 ];

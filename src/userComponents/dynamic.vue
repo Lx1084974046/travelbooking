@@ -104,6 +104,7 @@ export default {
       deldybtnshow: null,
       loadshow: true,
       mescroll: null, // mescroll实例对象
+      likes: false, //记录是否点赞过
       mescrollDown: {
         use: true, // 是否启用下拉刷新; 默认true
         auto: false, // 是否在初始化完毕之后自动执行下拉刷新的回调; 默认true
@@ -150,8 +151,7 @@ export default {
               this.list[index].like = true;
               this.list[index].num = this.list[index].num + 1;
               localStorage.removeItem("mydynamictoken");
-              localStorage.removeItem("communitytoken");
-              this.goCommunity();
+              this.likes = true;
             }
           })
           .catch();
@@ -175,8 +175,7 @@ export default {
             this.list[index].like = false;
             this.list[index].num = this.list[index].num - 1;
             localStorage.removeItem("mydynamictoken");
-            localStorage.removeItem("communitytoken");
-            this.goCommunity();
+            this.likes = true;
           }
         })
         .catch();
@@ -397,6 +396,15 @@ export default {
   },
   mounted() {
     this.goCommunity();
+  },
+  // beforeRouteEnter(to, from, next) { //奇怪为什么无法触发
+  //   console.log(" beforeRouteEnter !");
+  //   next();
+  // },
+  beforeDestroy() {
+    if (this.likes) {
+      localStorage.removeItem("communitytoken");
+    }
   },
 };
 </script>

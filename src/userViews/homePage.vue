@@ -2,10 +2,7 @@
   <div class="App">
     <topTab />
     <transition name="tips">
-      <tipsModel
-        v-if="this.dialogshow"
-        @handleUpdateClick="handleUpdateClick"
-      />
+      <tipsModel v-if="this.dialogshow" />
     </transition>
     <transition>
       <!-- :key控制子组件刷新同步数据更新 组件里的子模块数据往往无法刷新，需要其他方式进行手动刷新 -->

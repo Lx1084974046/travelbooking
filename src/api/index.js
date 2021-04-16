@@ -58,3 +58,7 @@ export const dynamicCommunity = params =>
 //点赞取消点赞
 export const likeDynamic = params =>
     post('/likeDynamic',params)
+
+//管理员登录
+export const adminLogin = params =>
+    post('/adminLogin',params)

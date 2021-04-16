@@ -97,35 +97,56 @@ export default {
             console.log(error);
           });
       } else {
-        console.log(this.date);
-        if (this.route1 == "") {
-          //未选择地点
-          this.route1 = "武汉";
+        console.log(Date.parse(new Date(this.date).toLocaleDateString()));
+        console.log(
+          Date.parse(
+            new Date(
+              new Date().setDate(new Date().getDate() + 5)
+            ).toLocaleDateString()
+          )
+        );
+        if (
+          Date.parse(new Date(this.date).toLocaleDateString()) >
+          Date.parse(
+            new Date(
+              new Date().setDate(new Date().getDate() + 4)
+            ).toLocaleDateString()
+          )
+        ) {
+          this.dialogshowchange(true);
+          this.dialogtitlechange("暂无数据");
+          this.dialogcontentchange("只能查看五天内的航班");
+          this.dialogreturnsbuttonchange(true);
+        } else {
+          if (this.route1 == "") {
+            //未选择地点
+            this.route1 = "武汉";
+          }
+          if (this.route2 == "") {
+            this.route2 = "北京";
+          }
+          let param2 = {
+            date: this.date,
+            route1: this.route1,
+            route2: this.route2,
+          };
+          queryList(param2)
+            .then((res) => {
+              console.log(res);
+              if (res.data != false) {
+                localStorage.setExpire("querytoken", res.data);
+                this.$store.commit("queryshowchange", true);
+              } else {
+                this.dialogshowchange(true);
+                this.dialogtitlechange("暂无数据");
+                this.dialogcontentchange("航班暂无排班");
+                this.dialogreturnsbuttonchange(true);
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+            });
         }
-        if (this.route2 == "") {
-          this.route2 = "北京";
-        }
-        let param2 = {
-          date: this.date,
-          route1: this.route1,
-          route2: this.route2,
-        };
-        queryList(param2)
-          .then((res) => {
-            console.log(res);
-            if (res.data != false) {
-              localStorage.setExpire("querytoken", res.data);
-              this.$store.commit("queryshowchange", true);
-            } else {
-              this.dialogshowchange(true);
-              this.dialogtitlechange("暂无数据");
-              this.dialogcontentchange("航班暂无排班");
-              this.dialogreturnsbuttonchange(true);
-            }
-          })
-          .catch((error) => {
-            console.log(error);
-          });
       }
     },
     change() {
@@ -202,8 +223,6 @@ input {
 }
 .el-date-table td {
   padding: 3px 2px;
-}
-.el-date-table td.disabled div {
 }
 .el-date-table th {
   padding: 2px 5px;

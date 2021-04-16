@@ -31,7 +31,7 @@
 
 <script>
 import { mapMutations } from "vuex";
-import { userLogin, bookcheck } from "@/api/index.js";
+import { userLogin } from "@/api/index.js";
 export default {
   name: "",
   data() {
@@ -87,10 +87,7 @@ export default {
           userLogin(this.form)
             .then((res) => {
               if (res.data === true) {
-                localStorage.setExpire(
-                  "logintoken",
-                  JSON.parse(res.config.data).account
-                );
+                localStorage.setExpire("logintoken", this.form.account);
                 localStorage.removeItem("communitytoken");
                 this.$router.push({ path: "/userHome/me/person" });
               } else {
