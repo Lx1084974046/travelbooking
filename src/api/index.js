@@ -62,3 +62,23 @@ export const likeDynamic = params =>
 //管理员登录
 export const adminLogin = params =>
     post('/adminLogin',params)
+
+//查询航班号是否存在
+export const checkFlightNum = params =>
+    get('/checkFlightNum',params)
+
+//添加航班
+export const addFlight = params =>
+    post('/addFlight',params)
+
+//更新航班
+export const updateFlight = params =>
+    post('/updateFlight',params)
+
+//取消航班
+export const delFlight = params =>
+deletes('/delFlight',params)
+
+//日期查询航班
+export const queryDy = params =>
+deletes('/queryDy',params)
