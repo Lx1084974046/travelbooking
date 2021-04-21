@@ -341,6 +341,9 @@ export default {
           .getExpire("communitytoken")
           .slice(0, this.dynumlength);
         console.log(this.dynumlength);
+        if (this.dynumlength == 0) {
+          this.nodynamic = true;
+        }
       } else {
         if (localStorage.getExpire("usertoken")) {
           console.log("不存在已登录");

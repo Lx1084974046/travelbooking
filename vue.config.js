@@ -1,6 +1,7 @@
 module.exports = {
   lintOnSave: false,
   productionSourceMap: false,
+  publicPath: process.env.NODE_ENV == 'production' ? './':'/',//更改线上打包资料
   configureWebpack: config => {
     config.devtool = "source-map";
   },
