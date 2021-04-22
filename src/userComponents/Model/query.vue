@@ -211,7 +211,7 @@ input {
 .el-date-editor.el-input {
   width: 108px !important;
 }
-.el-input__inner {
+.block .el-input__inner {
   border: unset;
   padding-right: 0 !important;
 }

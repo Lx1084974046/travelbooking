@@ -2,7 +2,8 @@ import axios from "axios";
 const instance = axios.create({
     // 创建axios实例，在这里可以设置请求的默认配置  创建一个新的axios实例
   timeout: 30000, // 设置超时时间10s
-  baseURL: "/api",
+  baseURL: process.env.VUE_APP_API_BASE_URL?process.env.VUE_APP_API_BASE_URL:'/api',
+  // baseURL: '/api',
 })
 // 文档统一设置post请求头。(post请求一般才需要设置)
 instance.defaults.headers.post["Content-Type"] =
