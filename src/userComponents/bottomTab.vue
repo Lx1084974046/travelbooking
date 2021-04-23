@@ -1,9 +1,45 @@
 <template>
   <div class="app">
-    <div @click="goHome">首页</div>
-    <div @click="goDynamic">动态圈</div>
-    <div @click="goTravel">行程</div>
-    <div @click="goMe">我</div>
+    <div
+      @click="goHome"
+      :style="
+        this.$route.path.search('home') != -1
+          ? 'color:#409eff'
+          : 'color:#A9A9A9'
+      "
+    >
+      首页
+    </div>
+    <div
+      @click="goDynamic"
+      :style="
+        this.$route.path.search('dynamic') != -1
+          ? 'color:#409eff'
+          : 'color:#A9A9A9'
+      "
+    >
+      动态圈
+    </div>
+    <div
+      @click="goTravel"
+      :style="
+        this.$route.path.search('travel') != -1
+          ? 'color:#409eff'
+          : 'color:#A9A9A9'
+      "
+    >
+      行程
+    </div>
+    <div
+      @click="goMe"
+      :style="
+        this.$route.path.search('userHome/me') != -1
+          ? 'color:#409eff'
+          : 'color:#A9A9A9'
+      "
+    >
+      我
+    </div>
   </div>
 </template>
 

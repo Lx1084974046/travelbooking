@@ -2,6 +2,7 @@
   <div class="manage-app">
     <div class="head">
       <span>航班后台管理系统</span>
+      <i class="loginout" @click="loginout"></i>
     </div>
     <div class="body-container">
       <div class="aside">
@@ -158,12 +159,12 @@
                   :src="
                     'http://localhost:3000/public/src/img/dynamic/' +
                     item.img +
-                    '.jpeg'
+                    '.png'
                   "
                   :preview-src-list="[
                     'http://localhost:3000/public/src/img/dynamic/' +
                       item.img +
-                      '.jpeg',
+                      '.png',
                   ]"
                   lazy
                 >
@@ -493,6 +494,13 @@ export default {
       "dialogbuttonchange",
       "dialogreturnsbuttonchange",
     ]),
+    loginout() {
+      this.dialogshowchange(true);
+      this.dialogtitlechange("确认注销");
+      this.dialogcontentchange("确认退出航班管理系统");
+      this.dialogbuttonchange("注销");
+      this.dialogreturnsbuttonchange(true);
+    },
     deldynamic(index) {
       this.deldyshow = true;
       this.deldyimg = this.dylist[index].img;
@@ -775,7 +783,16 @@ export default {
     height: 15%;
     background-color: #409eff;
     display: flex;
+    justify-content: space-between;
     align-items: center;
+    position: relative;
+
+    .loginout {
+      width: 32px;
+      height: 32px;
+      background: url('~@/assets/img/loginout.png');
+      margin-right: 100px;
+    }
 
     span {
       margin-left: 20px;

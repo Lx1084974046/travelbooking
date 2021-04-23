@@ -37,12 +37,12 @@
             :src="
               'http://localhost:3000/public/src/img/dynamic/' +
               item.img +
-              '.jpeg'
+              '.png'
             "
             :preview-src-list="[
               'http://localhost:3000/public/src/img/dynamic/' +
                 item.img +
-                '.jpeg',
+                '.png',
             ]"
             lazy
           >

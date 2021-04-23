@@ -189,6 +189,10 @@ export default {
             console.log(error);
           });
       }
+      if (this.$route.name == "manage" && this.dialogbutton == "注销") {
+        localStorage.removeItem("admintoken");
+        this.$router.push({ path: "/admin/login" });
+      }
     },
     cancel() {
       this.dialogshowchange(false);
