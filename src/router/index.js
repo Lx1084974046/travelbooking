@@ -5,11 +5,6 @@ import routes from "./routes";
 
 Vue.use(VueRouter);
 
-const routerReplace = VueRouter.prototype.replace;
-VueRouter.prototype.replace = function replace(location) {
-  return routerReplace.call(this, location).catch(error => error);
-  };
-
 const router = new VueRouter({
   routes,
 });
