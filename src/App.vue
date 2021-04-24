@@ -6,12 +6,12 @@
 
 <script>
 export default {
-    mounted(){
+    created(){
       this.$store.commit('Loadingchange',true)
       let _this = this
       setTimeout(function(){
         _this.$store.commit('Loadingchange',false)
-      },1000)
+      },2000)
     }
 };
 // 解决ios10及以上safari无法禁止缩放的问题
