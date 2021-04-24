@@ -151,6 +151,7 @@ export default {
       "returnlogochange",
       "reloadchange",
       "dynumchange",
+      "Loadingchange"
     ]),
     deldynamic(index) {
       this.dynumchange(this.mydynamiclist[index].img);
@@ -270,11 +271,13 @@ export default {
           this.nodynamic = true;
         }
       } else {
+        this.Loadingchange(true)
         console.log("bu存在");
         findDynamic({
           account: localStorage.getExpire("usertoken").user_Account,
         })
           .then((res) => {
+            this.Loadingchange(false)
             if (res.data == false) {
               this.nodynamic = true;
             } else {

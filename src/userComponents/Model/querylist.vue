@@ -173,6 +173,7 @@ export default {
       "cabinnumchange",
       "queryshowchange",
       "reloadchange",
+      "Loadingchange"
     ]),
     //更新页面数据
     handleUpdateClick() {
@@ -188,6 +189,7 @@ export default {
         this.dialogcontentchange("无法查看历史航班");
         this.dialogreturnsbuttonchange(true);
       } else {
+        this.Loadingchange(true)
         // let temp = Vue.filter("dateFormat");
         this.ondate = new Date(this.ondate).setDate(
           new Date(this.ondate).getDate() - 1
@@ -201,6 +203,7 @@ export default {
         console.log("qaaa");
         queryList(param1)
           .then((res) => {
+            this.Loadingchange(false)
             console.log(res);
             if (res.data != false) {
               console.log(res.data);
@@ -249,6 +252,7 @@ export default {
         this.dialogcontentchange("只能查看五天内的航班");
         this.dialogreturnsbuttonchange(true);
       } else {
+        this.Loadingchange(true)
         let param2 = {
           date: new Date(this.ondate).toLocaleDateString(),
           route1: this.route1,
@@ -257,6 +261,7 @@ export default {
         console.log("qaaa");
         queryList(param2)
           .then((res) => {
+            this.Loadingchange(false)
             console.log(res);
             if (res.data != false) {
               console.log(res.data);

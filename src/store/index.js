@@ -24,6 +24,7 @@ export default new Vuex.Store({
     newnum: "", //新航班号
     dynum: "",//动态编号
     dynumlength: 0,//动态数量
+    Loading:false,
   },
   mutations: {
     titlechange(state, value) {
@@ -82,6 +83,9 @@ export default new Vuex.Store({
     },
     dynumlengthchange(state,value){
       state.dynumlength = value
+    },
+    Loadingchange(state,value){
+      state.Loading = value
     }
   },
   actions: {},

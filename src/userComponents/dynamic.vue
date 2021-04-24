@@ -133,6 +133,7 @@ export default {
       "dialogtitlechange",
       "dialogcontentchange",
       "dialogreturnsbuttonchange",
+      "Loadingchange"
     ]),
     mescrollInit(mescroll) {
       this.mescroll = mescroll; // 如果this.mescroll对象没有使用到,则mescrollInit可以不用配置
@@ -345,12 +346,14 @@ export default {
           this.nodynamic = true;
         }
       } else {
+            this.Loadingchange(true)
         if (localStorage.getExpire("usertoken")) {
           console.log("不存在已登录");
           dynamicCommunity({
             account: localStorage.getExpire("usertoken").user_Account,
           })
             .then((res) => {
+                  this.Loadingchange(false)
               if (res.data == false) {
                 this.nodynamic = true;
                 localStorage.setExpire("communitytoken", this.list);
@@ -375,6 +378,7 @@ export default {
             account: null,
           })
             .then((res) => {
+                  this.Loadingchange(false)
               if (res.data == false) {
                 this.nodynamic = true;
                 localStorage.setExpire("communitytoken", this.list);

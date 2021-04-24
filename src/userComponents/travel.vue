@@ -133,6 +133,7 @@ export default {
       "flightnumchange",
       "oldnumchange",
       "newnumchange",
+      "Loadingchange"
     ]),
     book(index) {
       console.log(this.list1[index].flightNum);
@@ -150,6 +151,7 @@ export default {
       this.listshow = false;
     },
     rebookquery() {
+          this.Loadingchange(true)
       let param = {
         date: new Date(this.date).toLocaleDateString(),
         route1: this.route1,
@@ -157,6 +159,7 @@ export default {
       };
       queryList(param)
         .then((res) => {
+          this.Loadingchange(false)
           if (res.data != false) {
             this.list1 = res.data;
             this.listshow = true;
@@ -259,6 +262,7 @@ export default {
         account: localStorage.getExpire("logintoken"),
       })
         .then((res) => {
+              this.Loadingchange(false)
           //拿到详细信息数据进行数据处理
           if (res.data == false) {
             //没有订单时，设置nodata 但本地缓存了userorderlisttoken
@@ -379,6 +383,7 @@ export default {
           this.nodata = true;
         }
       } else {
+        this.Loadingchange(true)
         console.log("不存在");
         this.getUserOrder();
       }
