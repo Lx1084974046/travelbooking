@@ -893,7 +893,8 @@ export default {
           }
 
           .el-input--prefix .el-input__inner {
-            padding-left: 70px;
+            width: 139px;
+            padding-left: 35px;
           }
         }
 
