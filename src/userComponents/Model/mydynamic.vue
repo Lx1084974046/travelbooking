@@ -17,6 +17,7 @@
           :avatar="avatar"
           :nickname="nickname"
           :ID="ID"
+          :envtab="envtab"
         >
           <!-- v-for里面无法获取到data数据，需绑定传入，注意传入后的使用方式 -->
           <div class="user-info">
@@ -35,14 +36,18 @@
           <span class="text">{{ item.text }}</span>
           <el-image
             :src="
-              'http://localhost:3000/public/src/img/dynamic/' +
-              item.img +
-              '.png'
+              envtab
+                ? 'http://localhost:3000/public/src/img/dynamic/' +
+                  item.img +
+                  '.png'
+                : 'http://82.157.107.99/src/img/dynamic/' + item.img + '.png'
             "
             :preview-src-list="[
-              'http://localhost:3000/public/src/img/dynamic/' +
-                item.img +
-                '.png',
+              envtab
+                ? 'http://localhost:3000/public/src/img/dynamic/' +
+                  item.img +
+                  '.png'
+                : 'http://82.157.107.99/src/img/dynamic/' + item.img + '.png',
             ]"
             lazy
           >
@@ -133,6 +138,7 @@ export default {
       nodynamic: false,
       mydynamiclist: [],
       deldybtnshow: null,
+      envtab: true,
     };
   },
   computed: {
@@ -151,7 +157,7 @@ export default {
       "returnlogochange",
       "reloadchange",
       "dynumchange",
-      "Loadingchange"
+      "Loadingchange",
     ]),
     deldynamic(index) {
       this.dynumchange(this.mydynamiclist[index].img);
@@ -271,13 +277,13 @@ export default {
           this.nodynamic = true;
         }
       } else {
-        this.Loadingchange(true)
+        this.Loadingchange(true);
         console.log("bu存在");
         findDynamic({
           account: localStorage.getExpire("usertoken").user_Account,
         })
           .then((res) => {
-            this.Loadingchange(false)
+            this.Loadingchange(false);
             if (res.data == false) {
               this.nodynamic = true;
             } else {
@@ -293,6 +299,9 @@ export default {
     },
   },
   mounted() {
+    if (process.env.NODE_ENV == "production") {
+      this.envtab = false;
+    }
     this.dynamic();
     this.returnlogochange(true);
   },

@@ -9,15 +9,20 @@
           class="dynamic-container"
           v-for="(item, index) in list"
           :key="index"
+          :envtab="envtab"
         >
           <!-- v-for里面无法获取到data数据，需绑定传入，注意传入后的使用方式 -->
           <div class="user-info">
             <img
               class="dyavatar"
               :src="
-                'http://localhost:3000/public/src/img/avatars/' +
-                item.user_avatar +
-                '.png'
+                envtab
+                  ? 'http://localhost:3000/public/src/img/avatars/' +
+                    item.user_avatar +
+                    '.png'
+                  : 'http://82.157.107.99/src/img/avatars/' +
+                    item.user_avatar +
+                    '.png'
               "
               alt=""
             />
@@ -28,14 +33,18 @@
           <span class="text">{{ item.text }}</span>
           <el-image
             :src="
-              'http://localhost:3000/public/src/img/dynamic/' +
-              item.img +
-              '.png'
+              envtab
+                ? 'http://localhost:3000/public/src/img/dynamic/' +
+                  item.img +
+                  '.png'
+                : 'http://82.157.107.99/src/img/dynamic/' + item.img + '.png'
             "
             :preview-src-list="[
-              'http://localhost:3000/public/src/img/dynamic/' +
-                item.img +
-                '.png',
+              envtab
+                ? 'http://localhost:3000/public/src/img/dynamic/' +
+                  item.img +
+                  '.png'
+                : 'http://82.157.107.99/src/img/dynamic/' + item.img + '.png',
             ]"
             lazy
           >
@@ -99,6 +108,7 @@ export default {
   name: "",
   data() {
     return {
+      envtab: true,
       list: [],
       nodynamic: false,
       deldybtnshow: null,
@@ -133,7 +143,7 @@ export default {
       "dialogtitlechange",
       "dialogcontentchange",
       "dialogreturnsbuttonchange",
-      "Loadingchange"
+      "Loadingchange",
     ]),
     mescrollInit(mescroll) {
       this.mescroll = mescroll; // 如果this.mescroll对象没有使用到,则mescrollInit可以不用配置
@@ -338,6 +348,13 @@ export default {
     goCommunity() {
       if (localStorage.getExpire("communitytoken")) {
         console.log("存在");
+        if (localStorage.getExpire("communitytoken").length > 8) {
+          this.dynumlengthchange(8);
+        } else {
+          this.dynumlengthchange(
+            localStorage.getExpire("communitytoken").length
+          );
+        }
         this.list = localStorage
           .getExpire("communitytoken")
           .slice(0, this.dynumlength);
@@ -346,14 +363,14 @@ export default {
           this.nodynamic = true;
         }
       } else {
-            this.Loadingchange(true)
+        this.Loadingchange(true);
         if (localStorage.getExpire("usertoken")) {
           console.log("不存在已登录");
           dynamicCommunity({
             account: localStorage.getExpire("usertoken").user_Account,
           })
             .then((res) => {
-                  this.Loadingchange(false)
+              this.Loadingchange(false);
               if (res.data == false) {
                 this.nodynamic = true;
                 localStorage.setExpire("communitytoken", this.list);
@@ -378,7 +395,7 @@ export default {
             account: null,
           })
             .then((res) => {
-                  this.Loadingchange(false)
+              this.Loadingchange(false);
               if (res.data == false) {
                 this.nodynamic = true;
                 localStorage.setExpire("communitytoken", this.list);
@@ -402,6 +419,9 @@ export default {
     },
   },
   mounted() {
+    if (process.env.NODE_ENV == "production") {
+      this.envtab = false;
+    }
     this.goCommunity();
   },
   // beforeRouteEnter(to, from, next) { //奇怪为什么无法触发

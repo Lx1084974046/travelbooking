@@ -132,15 +132,24 @@
             <span>操作</span>
           </div>
           <div class="dy-main">
-            <div class="dy-list" v-for="(item, index) in dylist" :key="index">
+            <div
+              class="dy-list"
+              v-for="(item, index) in dylist"
+              :key="index"
+              :envtab="envtab"
+            >
               <div>
                 <div class="user">
                   <img
                     class="dyavatar"
                     :src="
-                      'http://localhost:3000/public/src/img/avatars/' +
-                      item.user_avatar +
-                      '.png'
+                      envtab
+                        ? 'http://localhost:3000/public/src/img/avatars/' +
+                          item.user_avatar +
+                          '.png'
+                        : 'http://82.157.107.99/src/img/avatars/' +
+                          item.user_avatar +
+                          '.png'
                     "
                     alt=""
                   />
@@ -157,14 +166,22 @@
               <div>
                 <el-image
                   :src="
-                    'http://localhost:3000/public/src/img/dynamic/' +
-                    item.img +
-                    '.png'
+                    envtab
+                      ? 'http://localhost:3000/public/src/img/dynamic/' +
+                        item.img +
+                        '.png'
+                      : 'http://82.157.107.99/src/img/dynamic/' +
+                        item.img +
+                        '.png'
                   "
                   :preview-src-list="[
-                    'http://localhost:3000/public/src/img/dynamic/' +
-                      item.img +
-                      '.png',
+                    envtab
+                      ? 'http://localhost:3000/public/src/img/dynamic/' +
+                        item.img +
+                        '.png'
+                      : 'http://82.157.107.99/src/img/dynamic/' +
+                        item.img +
+                        '.png',
                   ]"
                   lazy
                 >
@@ -405,6 +422,7 @@ export default {
   name: "",
   data() {
     return {
+      envtab: true,
       tabshow: true,
       datef: "",
       dated: "",
@@ -767,6 +785,9 @@ export default {
     },
   },
   mounted() {
+    if (process.env.NODE_ENV == "production") {
+      this.envtab = false;
+    }
     if (!localStorage.getExpire("admintoken")) {
       this.$router.push({ path: "/admin/login" });
     }
@@ -792,6 +813,7 @@ export default {
       height: 32px;
       background: url('~@/assets/img/loginout.png');
       margin-right: 100px;
+      cursor: pointer;
     }
 
     span {

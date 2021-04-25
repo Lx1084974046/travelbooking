@@ -101,10 +101,17 @@ export default {
               } else {
                 this.nickname = res.data[0].user_nickname;
               }
-              this.avatar =
-                "http://localhost:3000/public/src/img/avatars/" +
-                res.data[0].user_avatar +
-                ".png";
+              if (process.env.NODE_ENV == "production") {
+                this.avatar =
+                  "http://82.157.107.99/src/img/avatars/" +
+                  res.data[0].user_avatar +
+                  ".png";
+              } else {
+                this.avatar =
+                  "http://localhost:3000/public/src/img/avatars/" +
+                  res.data[0].user_avatar +
+                  ".png";
+              }
             }) //访问 localhost 的 net::ERR_UNKNOWN_URL_SCHEME 问题 解决方案是在 localhost 前面加上协议名：http://
             .catch((error) => {
               this.dialogtitlechange("Error");
@@ -127,10 +134,17 @@ export default {
           } else {
             this.nickname = userInfo.user_nickname;
           }
-          this.avatar =
-            "http://localhost:3000/public/src/img/avatars/" +
-            userInfo.user_avatar +
-            ".png";
+          if (process.env.NODE_ENV == "production") {
+            this.avatar =
+              "http://82.157.107.99/src/img/avatars/" +
+              userInfo.user_avatar +
+              ".png";
+          } else {
+            this.avatar =
+              "http://localhost:3000/public/src/img/avatars/" +
+              userInfo.user_avatar +
+              ".png";
+          }
         }
       }
     },
