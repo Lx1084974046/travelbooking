@@ -211,6 +211,7 @@ export default {
               this.list = res.data.slice(0, 8);
               localStorage.setExpire("communitytoken", res.data);
               if (res.data.length < 8) {
+                this.loadshow = false;
                 this.dynumlengthchange(res.data.length);
               } else {
                 this.dynumlengthchange(8);
@@ -244,6 +245,7 @@ export default {
               this.list = res.data.slice(0, 8);
               localStorage.setExpire("communitytoken", res.data);
               if (res.data.length < 8) {
+                this.loadshow = false;
                 this.dynumlengthchange(res.data.length);
               } else {
                 this.dynumlengthchange(8);
@@ -354,6 +356,7 @@ export default {
         if (localStorage.getExpire("communitytoken").length > 8) {
           this.dynumlengthchange(8);
         } else {
+          this.loadshow = false;
           this.dynumlengthchange(
             localStorage.getExpire("communitytoken").length
           );
@@ -382,6 +385,7 @@ export default {
                 this.list = res.data.slice(0, 8);
                 localStorage.setExpire("communitytoken", res.data);
                 if (res.data.length < 8) {
+                  this.loadshow = false;
                   this.dynumlengthchange(res.data.length);
                 } else {
                   this.dynumlengthchange(8);
@@ -407,6 +411,7 @@ export default {
                 this.list = res.data.slice(0, 8);
                 localStorage.setExpire("communitytoken", res.data);
                 if (res.data.length < 8) {
+                  this.loadshow = false;
                   this.dynumlengthchange(res.data.length);
                 } else {
                   this.dynumlengthchange(8);
@@ -464,8 +469,8 @@ export default {
   align-items: center;
 }
 .dynamic-list .dyavatar {
-  width: 32px;
-  height: 32px;
+  width: 38px;
+  height: 38px;
 }
 .dynamic-list .load-bottom {
   color: #a8a8a8;

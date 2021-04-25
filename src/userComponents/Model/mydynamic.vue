@@ -438,8 +438,9 @@ export default {
   align-items: center;
 }
 .dynamic-list .dyavatar {
-  width: 32px;
-  height: 32px;
+  border-radius: 50%;
+  width: 38px;
+  height: 38px;
 }
 .user-info .el-button {
   width: 32px;

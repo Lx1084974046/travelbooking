@@ -1,18 +1,22 @@
 <template>
-  <div id="app" v-loading.fullscreen.lock="this.$store.state.Loading"  element-loading-background="rgba(0,0,0,0.8)">
+  <div
+    id="app"
+    v-loading.fullscreen.lock="this.$store.state.Loading"
+    element-loading-background="rgba(0,0,0,0.8)"
+  >
     <router-view />
   </div>
 </template>
 
 <script>
 export default {
-    created(){
-      this.$store.commit('Loadingchange',true)
-      let _this = this
-      setTimeout(function(){
-        _this.$store.commit('Loadingchange',false)
-      },2000)
-    }
+  created() {
+    this.$store.commit("Loadingchange", true);
+    let _this = this;
+    setTimeout(function () {
+      _this.$store.commit("Loadingchange", false);
+    }, 2000);
+  },
 };
 // 解决ios10及以上safari无法禁止缩放的问题
 window.onload = function () {

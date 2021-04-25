@@ -56,7 +56,7 @@ export default {
       "dialogtitlechange",
       "dialogcontentchange",
       "dialogreturnsbuttonchange",
-      "Loadingchange"
+      "Loadingchange",
     ]),
     focus() {
       document.documentElement.style.overflow = "hidden";
@@ -65,7 +65,7 @@ export default {
       document.documentElement.style.overflow = "";
     },
     query() {
-      this.Loadingchange(true)
+      this.Loadingchange(true);
       if (this.date == "") {
         //未选择日期
         this.date1 = new Date().toLocaleDateString();
@@ -84,7 +84,7 @@ export default {
         };
         queryList(param1)
           .then((res) => {
-            this.Loadingchange(false)
+            this.Loadingchange(false);
             console.log(res);
             if (res.data != false) {
               localStorage.setExpire("querytoken", res.data);
@@ -116,6 +116,7 @@ export default {
             ).toLocaleDateString()
           )
         ) {
+          this.Loadingchange(false);
           this.dialogshowchange(true);
           this.dialogtitlechange("暂无数据");
           this.dialogcontentchange("只能查看五天内的航班");
@@ -135,7 +136,7 @@ export default {
           };
           queryList(param2)
             .then((res) => {
-              this.Loadingchange(false)
+              this.Loadingchange(false);
               console.log(res);
               if (res.data != false) {
                 localStorage.setExpire("querytoken", res.data);
