@@ -439,8 +439,8 @@ export default {
 }
 .dynamic-list .dyavatar {
   border-radius: 50%;
-  width: 38px;
-  height: 38px;
+  width: 38px !important;
+  height: 38px !important;
 }
 .user-info .el-button {
   width: 32px;
