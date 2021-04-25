@@ -193,7 +193,8 @@ export default {
     },
     //下拉刷新
     downCallback(mescroll) {
-      localStorage.removeItem("communitydytoken");
+      localStorage.removeItem("communitytoken");
+      localStorage.removeItem("mydynamictoken");
       this.loadshow = true;
       // 登录时刷新
       if (localStorage.getExpire("usertoken")) {
@@ -203,6 +204,7 @@ export default {
           .then((res) => {
             if (res.data == false) {
               this.nodynamic = true;
+              this.list = [];
               localStorage.setExpire("communitytoken", this.list);
               this.dynumlengthchange(0);
             } else {
@@ -235,6 +237,7 @@ export default {
           .then((res) => {
             if (res.data == false) {
               this.nodynamic = true;
+              this.list = [];
               localStorage.setExpire("communitytoken", this.list);
               this.dynumlengthchange(0);
             } else {
