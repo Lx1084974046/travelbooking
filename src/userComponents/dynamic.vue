@@ -469,6 +469,7 @@ export default {
   align-items: center;
 }
 .dynamic-list .dyavatar {
+  border-radius: 50%;
   width: 38px;
   height: 38px;
 }
