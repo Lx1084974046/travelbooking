@@ -19,10 +19,14 @@
                 envtab
                   ? 'http://localhost:3000/public/src/img/avatars/' +
                     item.user_avatar +
-                    '.png'
+                    '.png' +
+                    '?' +
+                    Math.random()
                   : 'http://82.157.107.99/src/img/avatars/' +
                     item.user_avatar +
-                    '.png'
+                    '.png' +
+                    '?' +
+                    Math.random()
               "
               alt=""
             />
