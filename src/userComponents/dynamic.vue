@@ -99,6 +99,7 @@
           >点击加载更多</el-button
         >
         <span class="load-bottom" v-else>人家是有底线的～</span>
+        <div class="bottom" :style="isIphone ? 'margin-top:80px' : ''"></div>
       </mescroll-vue>
     </div>
   </div>
@@ -112,6 +113,7 @@ export default {
   name: "",
   data() {
     return {
+      isIphone: false,
       envtab: true,
       list: [],
       nodynamic: false,
@@ -431,6 +433,13 @@ export default {
     },
   },
   mounted() {
+    if (
+      /Safari/.test(navigator.userAgent) &&
+      !/Chrome/.test(navigator.userAgent)
+    ) {
+      this.isIphone = true;
+      console.log("safari");
+    }
     if (process.env.NODE_ENV == "production") {
       this.envtab = false;
     }
@@ -480,6 +489,10 @@ export default {
 .dynamic-list .load-bottom {
   color: #a8a8a8;
   margin-bottom: 12px;
+}
+.dynamic-list .bottom {
+  width: 100%;
+  height: 1px;
 }
 .user-info .el-button {
   width: 32px;

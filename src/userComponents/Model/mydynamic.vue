@@ -88,6 +88,7 @@
             }}</span>
           </div>
         </div>
+        <div class="bottom" :style="isIphone ? 'margin-top:80px' : ''"></div>
       </div>
     </div>
     <transition name="send">
@@ -130,6 +131,7 @@ export default {
   props: ["avatar", "nickname", "ID"],
   data() {
     return {
+      isIphone: false,
       dytext: "",
       url: "",
       picValue: "",
@@ -299,6 +301,13 @@ export default {
     },
   },
   mounted() {
+    if (
+      /Safari/.test(navigator.userAgent) &&
+      !/Chrome/.test(navigator.userAgent)
+    ) {
+      this.isIphone = true;
+      console.log("safari");
+    }
     if (process.env.NODE_ENV == "production") {
       this.envtab = false;
     }
