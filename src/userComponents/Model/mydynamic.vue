@@ -107,7 +107,7 @@
           <i class="up" v-else></i>
           <input
             type="file"
-            accept="image/gif,image/jpeg,image/jpg,image/png"
+            accept="image/jpeg,image/jpg,image/png"
             @change="change"
             ref="clearFile"
           />
@@ -251,9 +251,9 @@ export default {
     change(e) {
       let files = e.target.files || e.dataTransfer.files;
       if (!files.length) return;
-      if (files[0].size > 6 * 1024 * 1024) {
+      if (files[0].size > 5 * 1024 * 1024) {
         this.$message({
-          message: "文件大小不能大于6M",
+          message: "文件大小不能大于5M",
           type: "warning",
           offset: 60,
           duration: 1000,
