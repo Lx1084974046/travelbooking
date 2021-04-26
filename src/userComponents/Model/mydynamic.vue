@@ -191,6 +191,7 @@ export default {
         this.dialogreturnsbuttonchange(true);
         this.dialogshowchange(true);
       } else {
+        this.Loadingchange(true);
         console.log("success");
         let dytime = null;
         let temp = Vue.filter("dateFormat"); //局部调用全局过滤器
@@ -211,6 +212,7 @@ export default {
         dynamic(params)
           .then((res) => {
             if (res.data == true) {
+              this.Loadingchange(false);
               this.$message({
                 message: "发表成功",
                 type: "success",
