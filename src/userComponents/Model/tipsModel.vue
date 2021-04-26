@@ -138,7 +138,7 @@ export default {
         }
       }
       //退票
-      if (this.$route.name == "travel") {
+      if (this.$route.name == "travel" && this.dialogbutton == "退票") {
         console.log("147");
         let param2 = {
           account: localStorage.getExpire("usertoken").user_Account,
