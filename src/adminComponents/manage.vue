@@ -957,6 +957,10 @@ export default {
               display: flex;
               align-items: center;
 
+              .dyavatar {
+                border-radius: 50%;
+              }
+
               img {
                 width: 50px;
                 height: 50px;
