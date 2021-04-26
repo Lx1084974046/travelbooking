@@ -76,8 +76,10 @@ export default {
       "dialogbuttonchange",
       "updateshowchange",
       "reloadchange",
+      "Loadingchange",
     ]),
     upload() {
+      this.Loadingchange(true);
       if (this.headerImage) {
         var form = {
           content: this.headerImage,
@@ -87,6 +89,7 @@ export default {
         userUpdate(form)
           .then((res) => {
             if (res.data == true) {
+              this.Loadingchange(false);
               this.$message({
                 message: "头像更换成功",
                 type: "success",
@@ -100,6 +103,7 @@ export default {
                 _this.reloadchange();
               }, 800);
             } else {
+              this.Loadingchange(false);
               this.$message.error("头像更换失败");
             }
           })
