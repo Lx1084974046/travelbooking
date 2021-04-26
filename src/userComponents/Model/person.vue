@@ -1,7 +1,7 @@
 <template>
   <div class="per">
     <div class="btn">
-      <img :src="this.avatar" alt="" />
+      <img :src="this.avatar + '?' + Math.random()" alt="" />
       <div class="ins">
         <span>昵称：{{ this.nickname }}</span>
         <span class="id1">ID:{{ this.ID }}</span>
@@ -138,16 +138,12 @@ export default {
             this.avatar =
               "http://82.157.107.99/src/img/avatars/" +
               userInfo.user_avatar +
-              ".png" +
-              "?" +
-              Math.random();
+              ".png";
           } else {
             this.avatar =
               "http://localhost:3000/public/src/img/avatars/" +
               userInfo.user_avatar +
-              ".png" +
-              "?" +
-              Math.random();
+              ".png";
           }
         }
       }

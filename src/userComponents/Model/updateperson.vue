@@ -1,7 +1,7 @@
 <template>
   <div class="update">
     <div class="update-head" v-if="!avatarupload">
-      <img :src="this.avatar" alt="" />
+      <img :src="this.avatar + '?' + Math.random()" alt="" />
       <div>
         <el-button size="small" type="primary" @click="cutavatar"
           >更换头像</el-button
