@@ -46,7 +46,7 @@
             <span>经济舱</span>
           </div>
         </div>
-        <div class="bottom"></div>
+        <div class="bottom" :style="isIphone ? 'margin-top:80px' : ''"></div>
       </div>
     </div>
     <transition>
@@ -138,6 +138,7 @@ export default {
   name: "",
   data() {
     return {
+      isIphone: false,
       listshow: true, //刷新list
       tipsdate: null,
       currentdate: null,
@@ -173,7 +174,7 @@ export default {
       "cabinnumchange",
       "queryshowchange",
       "reloadchange",
-      "Loadingchange"
+      "Loadingchange",
     ]),
     //更新页面数据
     handleUpdateClick() {
@@ -189,7 +190,7 @@ export default {
         this.dialogcontentchange("无法查看历史航班");
         this.dialogreturnsbuttonchange(true);
       } else {
-        this.Loadingchange(true)
+        this.Loadingchange(true);
         // let temp = Vue.filter("dateFormat");
         this.ondate = new Date(this.ondate).setDate(
           new Date(this.ondate).getDate() - 1
@@ -203,7 +204,7 @@ export default {
         console.log("qaaa");
         queryList(param1)
           .then((res) => {
-            this.Loadingchange(false)
+            this.Loadingchange(false);
             console.log(res);
             if (res.data != false) {
               console.log(res.data);
@@ -252,7 +253,7 @@ export default {
         this.dialogcontentchange("只能查看五天内的航班");
         this.dialogreturnsbuttonchange(true);
       } else {
-        this.Loadingchange(true)
+        this.Loadingchange(true);
         let param2 = {
           date: new Date(this.ondate).toLocaleDateString(),
           route1: this.route1,
@@ -261,7 +262,7 @@ export default {
         console.log("qaaa");
         queryList(param2)
           .then((res) => {
-            this.Loadingchange(false)
+            this.Loadingchange(false);
             console.log(res);
             if (res.data != false) {
               console.log(res.data);
@@ -347,6 +348,15 @@ export default {
     },
   },
   mounted() {
+    // navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad)/i) 匹配iphone
+    // navigator.userAgent.indexOf("Safari") > -1chrome浏览器也包含safari字段
+    if (
+      /Safari/.test(navigator.userAgent) &&
+      !/Chrome/.test(navigator.userAgent)
+    ) {
+      this.isIphone = true;
+      console.log("safari");
+    }
     this.currentdate = new Date().toLocaleDateString();
     this.$store.commit("returnlogochange", true);
     //localStorage无数据时为false
@@ -387,6 +397,8 @@ export default {
   justify-content: space-between;
   background-color: #fff;
   align-items: center;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  z-index: 9;
 }
 .list-nav span {
   margin: 0 6px;

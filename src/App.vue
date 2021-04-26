@@ -60,6 +60,10 @@ i {
 #app {
   height: 100vh;
   overflow: hidden scroll;
+
+  ::-webkit-scrollbar {
+    width: 0px;
+  }
 }
 
 body {
