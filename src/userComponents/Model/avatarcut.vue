@@ -114,6 +114,7 @@ export default {
             this.dialogshowchange(true);
           });
       } else {
+        this.Loadingchange(false);
         this.dialogtitlechange("不能上传");
         this.dialogcontentchange("请先选择图片");
         this.dialogbuttonchange("返回");
@@ -172,7 +173,7 @@ export default {
     //压缩图片
     dealImage(base64, w, callback) {
       var newImage = new Image();
-      var quality = 0.6; //压缩系数0-1之间
+      var quality = 0.3; //压缩系数0-1之间
       newImage.src = base64;
       newImage.setAttribute("crossOrigin", "Anonymous"); //url为外域时需要
       var imgWidth, imgHeight;
@@ -192,7 +193,7 @@ export default {
         } else {
           canvas.width = imgWidth;
           canvas.height = imgHeight;
-          quality = 0.6;
+          quality = 0.3;
         }
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(this, 0, 0, canvas.width, canvas.height);
