@@ -231,6 +231,53 @@
           </div>
         </div>
         <div class="manage-flight" v-if="manageshow">
+          <div class="admin-tips">
+            <table border="1">
+              <tr>
+                <th>航空公司</th>
+                <th>代号</th>
+                <th>中型机</th>
+                <th>大型机</th>
+              </tr>
+              <tr>
+                <td>川航</td>
+                <td>3U</td>
+                <td>A321</td>
+                <td>A342</td>
+              </tr>
+              <tr>
+                <td>国航</td>
+                <td>CA</td>
+                <td>A320</td>
+                <td>A345</td>
+              </tr>
+              <tr>
+                <td>海航</td>
+                <td>HU</td>
+                <td>A332</td>
+                <td>B767</td>
+              </tr>
+              <tr>
+                <td>南航</td>
+                <td>CZ</td>
+                <td>A333</td>
+                <td>A380</td>
+              </tr>
+              <tr>
+                <td>厦航</td>
+                <td>MF</td>
+                <td>A300</td>
+                <td>B737</td>
+              </tr>
+              <tr>
+                <td>东航</td>
+                <td>MU</td>
+                <td>A300</td>
+                <td>B777</td>
+              </tr>
+            </table>
+            <span>*管理员注意按照表格信息搭配</span>
+          </div>
           <div>
             <label for="">航班号:</label
             ><input
@@ -604,7 +651,7 @@ export default {
                 break;
               case "MF":
                 this.plane1 = "A300";
-                this.plane2 = "AB737";
+                this.plane2 = "B737";
                 break;
               case "MU":
                 this.plane1 = "A300";
@@ -995,6 +1042,23 @@ export default {
         top: 10%;
         background-color: #f5f5f5;
         z-index: 999;
+
+        .admin-tips {
+          position: absolute;
+          top: 0;
+          left: 5px;
+          display: flex;
+          flex-direction: column;
+
+          td {
+            text-align: center;
+          }
+
+          span {
+            color: red;
+            font-size: 14px;
+          }
+        }
 
         .bottom-tip {
           margin-top: 10px;
