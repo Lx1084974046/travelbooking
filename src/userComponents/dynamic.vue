@@ -22,7 +22,7 @@
                     '.png' +
                     '?' +
                     Math.random()
-                  : 'http://82.157.107.99/src/img/avatars/' +
+                  : 'http://www.lxcloud.love/src/img/avatars/' +
                     item.user_avatar +
                     '.png' +
                     '?' +
@@ -41,14 +41,16 @@
                 ? 'http://localhost:3000/public/src/img/dynamic/' +
                   item.img +
                   '.png'
-                : 'http://82.157.107.99/src/img/dynamic/' + item.img + '.png'
+                : 'http://www.lxcloud.love/src/img/dynamic/' + item.img + '.png'
             "
             :preview-src-list="[
               envtab
                 ? 'http://localhost:3000/public/src/img/dynamic/' +
                   item.img +
                   '.png'
-                : 'http://82.157.107.99/src/img/dynamic/' + item.img + '.png',
+                : 'http://www.lxcloud.love/src/img/dynamic/' +
+                  item.img +
+                  '.png',
             ]"
             lazy
           >
