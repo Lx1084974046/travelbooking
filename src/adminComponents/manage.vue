@@ -147,7 +147,7 @@
                         ? 'http://localhost:3000/public/src/img/avatars/' +
                           item.user_avatar +
                           '.png'
-                        : 'http://www.lxcloud.love/src/img/avatars/' +
+                        : 'https://www.lxcloud.love/src/img/avatars/' +
                           item.user_avatar +
                           '.png'
                     "
@@ -170,7 +170,7 @@
                       ? 'http://localhost:3000/public/src/img/dynamic/' +
                         item.img +
                         '.png'
-                      : 'http://www.lxcloud.love/src/img/dynamic/' +
+                      : 'https://www.lxcloud.love/src/img/dynamic/' +
                         item.img +
                         '.png'
                   "
@@ -179,7 +179,7 @@
                       ? 'http://localhost:3000/public/src/img/dynamic/' +
                         item.img +
                         '.png'
-                      : 'http://www.lxcloud.love/src/img/dynamic/' +
+                      : 'https://www.lxcloud.love/src/img/dynamic/' +
                         item.img +
                         '.png',
                   ]"

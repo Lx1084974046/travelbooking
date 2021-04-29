@@ -40,14 +40,16 @@
                 ? 'http://localhost:3000/public/src/img/dynamic/' +
                   item.img +
                   '.png'
-                : 'http://www.lxcloud.love/src/img/dynamic/' + item.img + '.png'
+                : 'https://www.lxcloud.love/src/img/dynamic/' +
+                  item.img +
+                  '.png'
             "
             :preview-src-list="[
               envtab
                 ? 'http://localhost:3000/public/src/img/dynamic/' +
                   item.img +
                   '.png'
-                : 'http://www.lxcloud.love/src/img/dynamic/' +
+                : 'https://www.lxcloud.love/src/img/dynamic/' +
                   item.img +
                   '.png',
             ]"
@@ -90,7 +92,7 @@
             }}</span>
           </div>
         </div>
-        <div class="bottom" :style="isIphone ? 'margin-top:80px' : ''"></div>
+        <div class="bottom" :style="isIphone ? 'margin-top:8vh' : ''"></div>
       </div>
     </div>
     <transition name="send">

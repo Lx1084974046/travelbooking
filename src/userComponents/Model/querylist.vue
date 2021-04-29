@@ -46,7 +46,7 @@
             <span>经济舱</span>
           </div>
         </div>
-        <div class="bottom" :style="isIphone ? 'margin-top:80px' : ''"></div>
+        <div class="bottom" :style="isIphone ? 'margin-top:8vh' : ''"></div>
       </div>
     </div>
     <transition>

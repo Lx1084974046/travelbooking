@@ -72,10 +72,10 @@ td {
   vertical-align: middle;
 }
 td:nth-child(1) {
-  background-color: #00ff00;
+  background-color: #90ee90;
 }
 td:nth-child(2) {
-  background-color: #409eff;
+  background-color: #87cefa;
 }
 td:nth-child(3) {
   background-color: #ffc0cb;

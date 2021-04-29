@@ -103,7 +103,7 @@ export default {
               }
               if (process.env.NODE_ENV == "production") {
                 this.avatar =
-                  "http://www.lxcloud.love/src/img/avatars/" +
+                  "https://www.lxcloud.love/src/img/avatars/" +
                   res.data[0].user_avatar +
                   ".png";
               } else {
@@ -136,7 +136,7 @@ export default {
           }
           if (process.env.NODE_ENV == "production") {
             this.avatar =
-              "http://www.lxcloud.love/src/img/avatars/" +
+              "https://www.lxcloud.love/src/img/avatars/" +
               userInfo.user_avatar +
               ".png";
           } else {

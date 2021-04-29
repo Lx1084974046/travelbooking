@@ -22,7 +22,7 @@
                     '.png' +
                     '?' +
                     Math.random()
-                  : 'http://www.lxcloud.love/src/img/avatars/' +
+                  : 'https://www.lxcloud.love/src/img/avatars/' +
                     item.user_avatar +
                     '.png' +
                     '?' +
@@ -41,14 +41,16 @@
                 ? 'http://localhost:3000/public/src/img/dynamic/' +
                   item.img +
                   '.png'
-                : 'http://www.lxcloud.love/src/img/dynamic/' + item.img + '.png'
+                : 'https://www.lxcloud.love/src/img/dynamic/' +
+                  item.img +
+                  '.png'
             "
             :preview-src-list="[
               envtab
                 ? 'http://localhost:3000/public/src/img/dynamic/' +
                   item.img +
                   '.png'
-                : 'http://www.lxcloud.love/src/img/dynamic/' +
+                : 'https://www.lxcloud.love/src/img/dynamic/' +
                   item.img +
                   '.png',
             ]"
@@ -101,7 +103,7 @@
           >点击加载更多</el-button
         >
         <span class="load-bottom" v-else>人家是有底线的～</span>
-        <div class="bottom" :style="isIphone ? 'margin-top:80px' : ''"></div>
+        <div class="bottom" :style="isIphone ? 'margin-top:8vh' : ''"></div>
       </mescroll-vue>
     </div>
   </div>
