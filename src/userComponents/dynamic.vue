@@ -161,6 +161,8 @@ export default {
     givelike(index) {
       console.log("zan");
       if (localStorage.getExpire("usertoken")) {
+        this.list[index].like = true;
+        this.list[index].num = this.list[index].num + 1;
         let params = {
           account: localStorage.getExpire("usertoken").user_Account,
           img: this.list[index].img,
@@ -169,8 +171,6 @@ export default {
         likeDynamic(params)
           .then((res) => {
             if (res.data == true) {
-              this.list[index].like = true;
-              this.list[index].num = this.list[index].num + 1;
               localStorage.removeItem("mydynamictoken");
               this.likes = true;
             }
@@ -184,6 +184,8 @@ export default {
       }
     },
     givenolike(index) {
+      this.list[index].like = false;
+      this.list[index].num = this.list[index].num - 1;
       console.log("nozan");
       let params = {
         account: localStorage.getExpire("usertoken").user_Account,
@@ -193,8 +195,6 @@ export default {
       likeDynamic(params)
         .then((res) => {
           if (res.data == true) {
-            this.list[index].like = false;
-            this.list[index].num = this.list[index].num - 1;
             localStorage.removeItem("mydynamictoken");
             this.likes = true;
           }
