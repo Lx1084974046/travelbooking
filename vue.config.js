@@ -32,6 +32,7 @@ module.exports = {
 
   //git测试
     //git测试1
+    //git测试2
   devServer: {
     open: true, //自动打开浏览器
     proxy: {
