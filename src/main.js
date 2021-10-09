@@ -6,6 +6,7 @@ import axios from 'axios';
 import moment from "moment";
 import ElementUI from "element-ui";
 import "element-ui/lib/theme-chalk/index.css";
+import './mock'
 
 Vue.use(ElementUI);
 Vue.prototype.axios = axios;  

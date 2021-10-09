@@ -1,4 +1,4 @@
-import { get,post,deletes } from '@/utils/request.js'
+import { get,post,deletes,put } from '@/utils/request.js'
 //用户注册
 export const userRegister = params =>
     post('/userRegister',params)
@@ -82,3 +82,7 @@ deletes('/delFlight',params)
 //日期查询航班
 export const queryDy = params =>
 deletes('/queryDy',params)
+
+//mockjs
+export const poMock = params =>
+put('/po/data',params)

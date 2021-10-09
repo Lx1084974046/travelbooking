@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import { adminLogin } from "@/api/index.js";
+import { adminLogin, poMock } from "@/api/index.js";
 export default {
   name: "",
   data() {
@@ -109,6 +109,15 @@ export default {
         }
       });
     },
+  },
+  mounted() {
+    poMock({ num: 10 })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   },
 };
 </script>
